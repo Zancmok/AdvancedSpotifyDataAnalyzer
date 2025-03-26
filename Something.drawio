@@ -1,9 +1,75 @@
 <mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36" version="26.1.3">
   <diagram name="Page-1" id="Q9-1I_g1rsCJmoO4rFUp">
-    <mxGraphModel>
+    <mxGraphModel dx="1687" dy="908" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
+        <mxCell id="uJpShLV4zQBpKt44rVRt-1" value="Track" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="160" y="650" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="uJpShLV4zQBpKt44rVRt-2" value="Album" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="444" y="650" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="uJpShLV4zQBpKt44rVRt-3" value="Creator" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="304" y="730" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="uJpShLV4zQBpKt44rVRt-4" value="User" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="304" y="650" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="uJpShLV4zQBpKt44rVRt-5" value="Genre" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="304" y="570" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="uJpShLV4zQBpKt44rVRt-11" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry width="830" height="440" as="geometry" />
+        </mxCell>
+        <mxCell id="uJpShLV4zQBpKt44rVRt-12" value="User Page" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry width="830" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="uJpShLV4zQBpKt44rVRt-13" value="Static Stuff + Basic Information" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry y="40" width="830" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="uJpShLV4zQBpKt44rVRt-14" value="Top Tracks" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="120" y="80" width="444" height="360" as="geometry" />
+        </mxCell>
+        <mxCell id="uJpShLV4zQBpKt44rVRt-16" value="Albums" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="564" y="260" width="266" height="180" as="geometry" />
+        </mxCell>
+        <mxCell id="uJpShLV4zQBpKt44rVRt-17" value="Top Genres" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry y="80" width="120" height="360" as="geometry" />
+        </mxCell>
+        <mxCell id="uJpShLV4zQBpKt44rVRt-20" value="Creators" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="564" y="80" width="266" height="180" as="geometry" />
+        </mxCell>
+        <mxCell id="uJpShLV4zQBpKt44rVRt-21" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="850" width="830" height="440" as="geometry" />
+        </mxCell>
+        <mxCell id="uJpShLV4zQBpKt44rVRt-22" value="Track Page" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="850" width="830" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="uJpShLV4zQBpKt44rVRt-23" value="Static Stuff + Basic Information" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="850" y="40" width="830" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="uJpShLV4zQBpKt44rVRt-24" value="Top Users(Listeners)" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="850" y="80" width="830" height="360" as="geometry" />
+        </mxCell>
+        <mxCell id="uJpShLV4zQBpKt44rVRt-28" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="850" y="450" width="830" height="440" as="geometry" />
+        </mxCell>
+        <mxCell id="uJpShLV4zQBpKt44rVRt-29" value="Creator Page" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="850" y="450" width="830" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="uJpShLV4zQBpKt44rVRt-30" value="Static Stuff + Basic Information" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="850" y="490" width="830" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="uJpShLV4zQBpKt44rVRt-31" value="Top Tracks" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1124.1599999999999" y="530" width="281.69" height="360" as="geometry" />
+        </mxCell>
+        <mxCell id="uJpShLV4zQBpKt44rVRt-39" value="Top Users(Listeners)" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1405.85" y="530" width="274.15" height="360" as="geometry" />
+        </mxCell>
+        <mxCell id="uJpShLV4zQBpKt44rVRt-40" value="Top Albums" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="849.9999999999999" y="530" width="274.15" height="360" as="geometry" />
+        </mxCell>
       </root>
     </mxGraphModel>
   </diagram>
