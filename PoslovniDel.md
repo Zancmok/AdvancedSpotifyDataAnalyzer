@@ -57,7 +57,44 @@
 | Zmanjšanje dostopa do podatkov: Povečana regulacija spletnih podatkov ali spremembe na spletnih platformah (npr. blokiranje spletnega strganja) lahko vplivajo na zmožnost pridobivanja podatkov.    |
 
 ### Strategije na podlagi SWOT:
-- S-O strategija: 
+- S-O strategija:
+    - Fleksibilnost in inovativni pristop za integracijo dodatnih virov, kot sta YouTube in Apple Music, je odlična priložnost za širitev funkcionalnosti in dosego širše ciljne skupine. To bi omogočilo edinstvene možnosti, ki jih konkurenca morda nima.
+
+    - Neodvisnost od API-ja daje veliko prednost, saj omogoča hitrejšo prilagodljivost. V primeru hitrih sprememb v potrebah uporabnikov je to lahko odločilna prednost.
 - W-O strategija:
+    - Sistem za validacijo in preverjanje točnosti podatkov je ključnega pomena za izboljšanje zanesljivosti. To bo zmanjšalo tveganje napačnih informacij in izboljšalo uporabniško izkušnjo.
+
+    - Partnerstva z drugimi platformami za dostop do boljših podatkov je zelo dobra priložnost za izboljšanje kakovosti virov in zmanjšanje odvisnosti od lastnih metod zbiranja.
+
 - S-T strategija:
+    - Inovativni pristopi in tehnična prilagodljivost so odlični za razvoj mehanizmov, ki se bodo lahko hitro prilagajali spremembam v spletnih platformah (npr. spremembam v anti-scraping politikah).
+
+    - Svoboda za hitro razvijanje alternativnih metod zbiranja podatkov v primeru blokad je zelo pomembna, saj lahko to zmanjša vpliv morebitnih težav z dostopnostjo podatkov.
 - W-T strategija:
+    - Investiranje v pravno podporo in transparentno politiko uporabe podatkov je nujno, saj lahko pomaga pri preprečevanju pravnih težav, če se pojavijo spremembe v regulativah ali pritožbe uporabnikov.
+
+    - Modularna struktura sistema omogoča hitro prilagajanje, kar je koristno v primeru, da pride do sprememb na posameznih virih. To omogoča fleksibilnost, da hitro reagiraš na grožnje.
+
+# Poslovni model in osnovni finančni plan
+
+## Viri prihodkov
+- Osnovna aplikacija je brezplačna  
+    - Omogoča osnovno individualno analizo poslušanja prek enostavne prijave s Spotify računom.
+
+- Reklame na spletni strani
+
+## Struktura stroškov:
+
+- Začetni razvoj: 200€  
+  - Minimalna izvedljiva verzija (MVP), večina dela opravljena s strani ustanoviteljev (razvoj, UI/UX, povezava z API-ji). 
+
+- Mesečno vzdrževanje: 80€  
+  - Gostovanje, baze podatkov, posodobitve, osnovna tehnična podpora.
+
+## Strategija pridobivanja uporabnikov:
+
+- Influencerji na področju glasbe in statistike  
+  - YouTuberji in TikTokerji, ki delajo vsebine o Spotify Wrapped, glasbenih okusih itd.
+
+- Kampanja “povabi prijatelja”  
+  - Uporabnik in prijatelj dobita 1 mesec Premium članstva, če se prijatelj registrira in poveže Spotify račun.
