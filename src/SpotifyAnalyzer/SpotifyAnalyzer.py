@@ -4,6 +4,7 @@
 
 from flask import Flask, render_template
 import SpotifyAnalyzer.config as config
+from SpotifyAnalyzer.DatabaseManager import DatabaseManager
 
 
 class SpotifyAnalyzer:
@@ -24,6 +25,8 @@ class SpotifyAnalyzer:
         """
         
         SpotifyAnalyzer.app.config["SECRET_KEY"] = config.FLASK_SECRET_KEY
+
+        DatabaseManager.do_kurwa()
 
         SpotifyAnalyzer.app.run(
             host=config.HOST,
