@@ -26,8 +26,6 @@ class SpotifyAnalyzer:
         
         SpotifyAnalyzer.app.config["SECRET_KEY"] = config.FLASK_SECRET_KEY
 
-        DatabaseManager.do_kurwa()
-
         SpotifyAnalyzer.app.run(
             host=config.HOST,
             port=config.PORT,
