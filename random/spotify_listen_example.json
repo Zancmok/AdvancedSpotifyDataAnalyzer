@@ -1,0 +1,21 @@
+{
+    "ts": "2014-07-27T20:34:47Z",
+    "platform": "Android OS 4.2.2 API 17 (samsung, GT-I9195)",
+    "ms_played": 35422,
+    "conn_country": "GB",
+    "ip_addr": "92.40.248.131",
+    "master_metadata_track_name": "Communication Breakdown - Remaster",
+    "master_metadata_album_artist_name": "Led Zeppelin",
+    "master_metadata_album_album_name": "Led Zeppelin",
+    "spotify_track_uri": "spotify:track:2whQxHDxButA5STZ32FYme",
+    "episode_name": null,
+    "episode_show_name": null,
+    "spotify_episode_uri": null,
+    "reason_start": "appload",
+    "reason_end": "endplay",
+    "shuffle": false,
+    "skipped": true,
+    "offline": false,
+    "offline_timestamp": null,
+    "incognito_mode": false
+}
