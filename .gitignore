@@ -1,0 +1,6 @@
+.env
+.venv
+.idea
+src/__pycache__
+src/SpotifyAnalyzer/__pycache__
+database.db
