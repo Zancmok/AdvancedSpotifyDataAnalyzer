@@ -1,5 +1,3 @@
-,
-
 # POSLOVNI DEL
 
 ## Problem
