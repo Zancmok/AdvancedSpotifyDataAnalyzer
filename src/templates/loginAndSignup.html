@@ -9,72 +9,7 @@
     <title>AdvancedSpotifyDataAnalyzer</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <style>
-      /* Force Dark Mode */
-      body, .container, .card {
-        background-color: #121212;
-        color: white;
-      }
-
-      /* Enhanced Card Styling */
-      .card {
-        border-radius: 15px;
-        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3); /* More pronounced shadow */
-        border: 2px solid #333; /* Border to make the card more defined */
-        background-color: #1e1e1e; /* Slightly lighter than the background to make it pop */
-      }
-
-      .card h3 {
-        color: #fafafa; /* Purple color for the header to make it stand out */
-      }
-
-      .nav-tabs .nav-link {
-        color: #b0b0b0;
-        font-weight: bold;
-      }
-
-      .nav-tabs .nav-link.active {
-        background-color: #333;
-        color: white;
-      }
-
-      .form-control {
-        background-color: #2a2a2a;
-        color: white;
-        border: 1px solid #444;
-        border-radius: 8px;
-      }
-
-      .btn-primary {
-        background-color: #6f42c1;
-        color: white;
-        border-radius: 8px;
-        padding: 12px;
-      }
-
-      .btn-primary:hover {
-        background-color: #563d7c;
-      }
-
-      .btn-success {
-        background-color: #28a745;
-        color: white;
-        border-radius: 8px;
-        padding: 12px;
-      }
-
-      .btn-success:hover {
-        background-color: #218838;
-      }
-
-      .footer {
-        color: #bbb;
-        text-align: center;
-        font-size: 12px;
-        margin-top: 30px;
-        background-color: #121212;
-      }
-    </style>
+    <link rel="stylesheet" type="text/css" href="../static/css/login_signup_page.css">
   </head>
   <body>
     <div class="container d-flex justify-content-center align-items-center" style="height: 100vh;">
@@ -83,13 +18,14 @@
         <!-- Nav tabs to switch between Sign Up and Login -->
         <ul class="nav nav-tabs" id="authTabs" role="tablist">
           <li class="nav-item" role="presentation">
-            <a class="nav-link" id="signup-tab" data-bs-toggle="tab" href="#signup" role="tab" aria-controls="signup" aria-selected="true">Sign Up</a>
+            <a class="nav-link active" id="signup-tab" data-bs-toggle="tab" href="#signup" role="tab" aria-controls="signup" aria-selected="true">Sign Up</a>
           </li>
           <li class="nav-item" role="presentation">
-            <a class="nav-link active" id="login-tab" data-bs-toggle="tab" href="#login" role="tab" aria-controls="login" aria-selected="false">Login</a>
+            <a class="nav-link" id="login-tab" data-bs-toggle="tab" href="#login" role="tab" aria-controls="login" aria-selected="false">Login</a>
           </li>
         </ul>
         <div class="tab-content mt-3" id="authTabsContent">
+		
           <!-- Sign Up Form -->
           <div class="tab-pane fade show active" id="signup" role="tabpanel" aria-labelledby="signup-tab">
             <form>
@@ -100,6 +36,10 @@
               <div class="mb-3">
                 <label for="signup-password" class="form-label">Password</label>
                 <input type="password" class="form-control" id="signup-password" required>
+              </div>
+              <div class="mb-3">
+                <label for="confirm-password" class="form-label">Confirm Password</label>
+                <input type="password" class="form-control" id="confirm-password" required>
               </div>
               <div class="d-grid gap-2">
                 <button type="submit" class="btn btn-success">Sign Up</button>
@@ -128,6 +68,39 @@
     </div>
 
     <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    
+	<!-- wriiten by AI -->
+    <script>
+      // Add enhanced animation handling
+      document.addEventListener('DOMContentLoaded', function() {
+        const tabLinks = document.querySelectorAll('.nav-link');
+        
+        tabLinks.forEach(tab => {
+          tab.addEventListener('click', function() {
+            // First reset all animations by removing and re-adding the show class
+            document.querySelectorAll('.tab-pane').forEach(pane => {
+              if (pane.classList.contains('show')) {
+                pane.style.opacity = '0';
+                pane.style.transform = 'translateY(10px)';
+                
+                // Force reflow to ensure animation plays again
+                void pane.offsetWidth;
+              }
+            });
+            
+            // Give time for the animation to play
+            setTimeout(() => {
+              const targetTab = document.querySelector(this.getAttribute('href'));
+              if (targetTab) {
+                targetTab.style.opacity = '1';
+                targetTab.style.transform = 'translateY(0)';
+              }
+            }, 50);
+          });
+        });
+      });
+    </script>
+	<!-- wriiten by AI -->
   </body>
 </html>
