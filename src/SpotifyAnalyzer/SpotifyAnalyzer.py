@@ -26,11 +26,15 @@ class SpotifyAnalyzer:
         
         SpotifyAnalyzer.app.config["SECRET_KEY"] = config.FLASK_SECRET_KEY
 
-        SpotifyAnalyzer.app.run(
+        DatabaseManager.fget("make_bobr_db.sql")
+
+        DatabaseManager.fget("get_specific_bobr.sql", bobr_id=2)
+
+        """SpotifyAnalyzer.app.run(
             host=config.HOST,
             port=config.PORT,
             debug=config.DEBUG
-        )
+        )"""
 
     @staticmethod
     @app.route("/")
