@@ -8,32 +8,13 @@
         <meta name="keywords" content="Spotify, data, analysis">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-        <style>
-            #skam {
-                background-color: #00FFFF;
-                padding: 20px 0;
-            }
-
-            #but {
-                background-color: #ff6347;
-                color: white;
-            }
-
-            .section-box {
-                border: 1px solid #ccc;
-                padding: 1rem;
-                height: 100%;
-                text-align: center;
-                background-color: #f8f9fa;
-                border-radius: 8px;
-            }
-        </style>
+		<link rel="stylesheet" type="text/css" href="../static/css/index.css">
     </head>
 
     <body>
         <!-- Header -->
         <header>
-            <nav class="navbar bg-body-tertiary">
+            <nav class="navbar">
                 <div id="skam" class="container-fluid d-flex justify-content-between align-items-center">
                     <h1 class="mx-auto">Main Page Bish Bash Bosh</h1>
                     <button id="but" class="btn btn-outline-success" type="button">Logout</button>
@@ -45,72 +26,62 @@
         <main class="container-fluid mt-4">
 
             <!-- Static Info -->
-			<div id="skam" class="container-fluid d-flex align-items-center">
-				<label for="appt">Select a date low:</label>
-				<input type="date" id="appt" name="appt">
-				<label for="appt">Select a date big:</label>
-				<input type="date" id="appt" name="appt">
+            <div id="skam" class="container-fluid d-flex align-items-center">
+                <label for="appt">Select a date low:</label>
+                <input type="date" id="appt" name="appt" class="fade-in">
+                <label for="appt">Select a date big:</label>
+                <input type="date" id="appt" name="appt" class="fade-in">
             </div>
-			<!-- ADD here -->
 
             <!-- Main Grid -->
-            <div class="row">
+            <div class="row mt-4">
                 <!-- Left Column -->
                 <div class="col-md-2 d-flex flex-column gap-3">
-                    <div class="section-box"><p>top users</p>
-						<ul class="list-group">
-							<li class="list-group-item">An active item</li>
-							<li class="list-group-item">A second item</li>
-							<li class="list-group-item">A third item</li>
-							<li class="list-group-item">A fourth item</li>
-							<li class="list-group-item">And a fifth one</li>
-							<li class="list-group-item">And a fifth one</li>
-							<li class="list-group-item">And a fifth one</li>
-							<li class="list-group-item">And a fifth one</li>
-							<li class="list-group-item">And a fifth one</li>
-						</ul>
-					</div>
-                    <div class="section-box"> <p>top ganre</p>
-						<ul class="list-group">
-							<li class="list-group-item">An active item</li>
-							<li class="list-group-item">A second item</li>
-							<li class="list-group-item">A third item</li>
-							<li class="list-group-item">A fourth item</li>
-							<li class="list-group-item">And a fifth one</li>
-						</ul>
-					</div>
+                    <div class="section-box"><p>Top Users</p>
+                        <ul class="list-group fade-in">
+                            <li class="list-group-item">An active item</li>
+                            <li class="list-group-item">A second item</li>
+                            <li class="list-group-item">A third item</li>
+                            <li class="list-group-item">A fourth item</li>
+                            <li class="list-group-item">And a fifth one</li>
+                        </ul>
+                    </div>
+                    <div class="section-box mt"><p>Top Genre</p>
+                        <ul class="list-group fade-in">
+                            <li class="list-group-item">An active item</li>
+                            <li class="list-group-item">A second item</li>
+                            <li class="list-group-item">A third item</li>
+                            <li class="list-group-item">A fourth item</li>
+                            <li class="list-group-item">And a fifth one</li>
+                        </ul>
+                    </div>
                 </div>
 
                 <!-- Center Column -->
                 <div class="col-md-8">
-                    <div class="section-box h-100">Main</div>
+                    <div class="section-box h-100">Main Content Here</div>
                 </div>
 
                 <!-- Right Column -->
                 <div class="col-md-2 d-flex flex-column gap-3">
                     <div class="section-box">
-						<ul class="list-group"><p>top Creators</p>
-							<li class="list-group-item">An active item</li>
-							<li class="list-group-item">A second item</li>
-							<li class="list-group-item">A third item</li>
-							<li class="list-group-item">A fourth item</li>
-							<li class="list-group-item">And a fifth one</li>
-							<li class="list-group-item">And a fifth one</li>
-							<li class="list-group-item">And a fifth one</li>
-						</ul>
-					
-					</div>
+                        <ul class="list-group fade-in"><p>Top Creators</p>
+                            <li class="list-group-item">An active item</li>
+                            <li class="list-group-item">A second item</li>
+                            <li class="list-group-item">A third item</li>
+                            <li class="list-group-item">A fourth item</li>
+                            <li class="list-group-item">And a fifth one</li>
+                        </ul>
+                    </div>
                     <div class="section-box">
-						<ul class="list-group"> <p>top Albums</p>
-							<li class="list-group-item">An active item</li>
-							<li class="list-group-item">A second item</li>
-							<li class="list-group-item">A third item</li>
-							<li class="list-group-item">A fourth item</li>
-							<li class="list-group-item">And a fifth one</li>
-							<li class="list-group-item">And a fifth one</li>
-							<li class="list-group-item">And a fifth one</li>
-						</ul>
-					</div>
+                        <ul class="list-group fade-in"><p>Top Albums</p>
+                            <li class="list-group-item">An active item</li>
+                            <li class="list-group-item">A second item</li>
+                            <li class="list-group-item">A third item</li>
+                            <li class="list-group-item">A fourth item</li>
+                            <li class="list-group-item">And a fifth one</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </main>
