@@ -26,9 +26,11 @@ class SpotifyAnalyzer:
         
         SpotifyAnalyzer.app.config["SECRET_KEY"] = config.FLASK_SECRET_KEY
 
-        DatabaseManager.fget("make_bobr_db.sql")
+        print(DatabaseManager.fget("miku_dayo.sql"))
 
-        DatabaseManager.fget("get_specific_bobr.sql", bobr_id=2)
+        DatabaseManager.frun("make_bobr_db.sql")
+
+        print(DatabaseManager.fget("get_specific_bobr.sql", bobr_id=2))
 
         """SpotifyAnalyzer.app.run(
             host=config.HOST,

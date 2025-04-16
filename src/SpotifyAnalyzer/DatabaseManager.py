@@ -34,7 +34,27 @@ class DatabaseManager:
         
         file_contents = file_contents.format(**kwargs)
 
-        for line in file_contents.split(';'):
-            result: Cursor = DatabaseManager._cursor.execute(line)
+        DatabaseManager._cursor.execute(file_contents)
 
-        print(result.fetchall())
+        return DatabaseManager._cursor.fetchall()
+
+    @staticmethod
+    def frun(script: str, **kwargs) -> None:
+        """
+        # TODO: Write Docstring!
+        """
+
+        path: str = os.path.join(config.SQL_PATH, script)
+
+        if not os.path.exists(path):
+            raise FileNotFoundError(f"Script: {script} does not exist.")
+
+        file_contents: str
+        with open(path) as file:
+            file_contents = file.read()
+        
+        file_contents = file_contents.format(**kwargs)
+
+        DatabaseManager._cursor.executescript(file_contents)
+
+        DatabaseManager._connection.commit()
