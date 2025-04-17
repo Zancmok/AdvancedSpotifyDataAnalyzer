@@ -1,0 +1,210 @@
+/* Force Dark Mode */
+body, .container, .card {
+    background-color: #121212;
+    color: white;
+}
+
+/* Enhanced Card Styling */
+.card {
+    border-radius: 15px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    border: 2px solid #333;
+    background-color: #1e1e1e;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.card h3 {
+    color: #fafafa;
+}
+
+.nav-tabs .nav-link {
+    color: #b0b0b0;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.nav-tabs .nav-link.active {
+    background-color: #333;
+    color: white;
+}
+
+.nav-tabs .nav-link.active::after {
+    width: 100%;
+    left: 0;
+}
+
+.nav-tabs .nav-link:hover::after {
+    width: 50%;
+    left: 25%;
+}
+
+.form-control {
+    background-color: #2a2a2a;
+    color: white;
+    border: 1px solid #444;
+    border-radius: 8px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-control:focus {
+    background-color: #333;
+    box-shadow: 0 0 0 0.2rem rgba(29, 185, 84, 0.25);
+    border-color: #1DB954;
+    color: white;
+}
+
+.form-control::placeholder {
+    color: #aaa;
+}
+
+.form-check-input {
+    background-color: #2a2a2a;
+    border: 1px solid #444;
+}
+
+.form-check-input:checked {
+    background-color: #1DB954;
+    border-color: #1DB954;
+}
+
+.btn-primary {
+    color: white;
+    border-radius: 8px;
+    padding: 12px;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #00308F;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.btn-success {
+    background-color: #1DB954;
+    color: white;
+    border-radius: 8px;
+    padding: 12px;
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.btn-success:hover {
+    background-color: #1ed760;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Tab content fade animations */
+.tab-pane {
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.tab-pane.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Fade in for form elements */
+.form-label, .form-control, .btn, .form-check {
+    animation: fadeIn 0.8s ease forwards;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Staggered animation for form elements */
+form .mb-3:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+form .mb-3:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+form .mb-3:nth-child(3) {
+    animation-delay: 0.3s;
+}
+
+form .mb-3:nth-child(4) {
+    animation-delay: 0.4s;
+}
+
+form .d-grid {
+    animation-delay: 0.5s;
+}
+
+/* Header bar styling */
+.header {
+    background-color: #1e1e1e;
+    padding: 15px 0;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.header h2 {
+    margin: 0;
+    color: #1DB954;
+}
+
+.header .nav-link {
+    color: #b0b0b0;
+    margin: 0 10px;
+    transition: all 0.3s ease;
+}
+
+.header .nav-link:hover {
+    color: #1DB954;
+}
+
+.header .nav-link.active {
+    color: #1DB954;
+    font-weight: bold;
+}
+
+/* Profile picture section */
+.profile-pic {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background-color: #333;
+    margin: 0 auto 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border: 2px solid #1DB954;
+}
+
+.profile-pic img {
+    width: 100%;
+    height: auto;
+}
+
+.profile-pic-placeholder {
+    font-size: 40px;
+    color: #666;
+}
+
+/* Empty tab styling */
+.empty-tab-content {
+    padding: 30px 15px;
+    text-align: center;
+    color: #888;
+}
+
+.empty-tab-icon {
+    font-size: 40px;
+    margin-bottom: 15px;
+}
