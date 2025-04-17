@@ -75,3 +75,7 @@ class SpotifyAnalyzer:
 
         if request.method == "GET":
             return render_template("loginAndSignup.html")
+
+        data: dict[str, Any] = request.get_json()
+
+        print(data)
