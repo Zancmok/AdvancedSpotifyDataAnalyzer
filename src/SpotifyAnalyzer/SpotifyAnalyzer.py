@@ -47,7 +47,7 @@ class SpotifyAnalyzer:
 
         SpotifyAnalyzer.app.config["SECRET_KEY"] = config.FLASK_SECRET_KEY
 
-        DatabaseManager.frun("create_db.sql")
+        DatabaseManager.execute_script("create_db.sql")
 
         SpotifyAnalyzer.app.run(
             host=config.HOST,
@@ -93,9 +93,9 @@ class SpotifyAnalyzer:
             return {'success': False, 'reason': "You nameless or something?"}
 
         if data.get('type') == 'SIGNUP':
-            print(DatabaseManager.fget("get_user.sql", username=username))
+            print(DatabaseManager.run_query("get_user.sql", username=username))
 
-            if DatabaseManager.fget("get_user.sql", username=username):
+            if DatabaseManager.run_query("get_user.sql", username=username):
                 return {'success': False, 'reason': "User already exists."}  # TODO: Test is this special sauce actually works
 
             password_bytes: bytes = password.encode('utf-8') 
@@ -106,6 +106,8 @@ class SpotifyAnalyzer:
 
             decoded_hash: str = password_hash.decode('utf-8')
 
-            DatabaseManager.frun("add_user.sql", username=username, password=decoded_hash)
+            DatabaseManager.run_query("add_user.sql", username=username, password=decoded_hash)
+
+            return {'success': True, 'reason': ""}
         else:
-            pass
+            return {'success': False, 'reason': "Code not implemented yet."}

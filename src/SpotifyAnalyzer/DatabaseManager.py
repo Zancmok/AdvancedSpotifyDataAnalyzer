@@ -14,13 +14,10 @@ class DatabaseManager:
     # TODO: Write Docstring!
     """
 
-    _connection: Connection = sqlite3.connect(config.DATABASE_PATH)
-    _cursor: Cursor = _connection.cursor()
-
     @staticmethod
-    def fget(script: str, **kwargs) -> Any:
+    def _load_query(script: str) -> str:
         """
-        # TODO: Write Docstring!
+        Loads and formats an SQL script with given arguments.
         """
 
         path: str = os.path.join(config.SQL_PATH, script)
@@ -28,33 +25,37 @@ class DatabaseManager:
         if not os.path.exists(path):
             raise FileNotFoundError(f"Script: {script} does not exist.")
 
-        file_contents: str
         with open(path) as file:
-            file_contents = file.read()
-        
-        file_contents = file_contents.format(**kwargs)
+            contents: str = file.read()
 
-        DatabaseManager._cursor.execute(file_contents)
-
-        return DatabaseManager._cursor.fetchall()
+        return contents
 
     @staticmethod
-    def frun(script: str, **kwargs) -> None:
+    def run_query(script: str, **kwargs) -> Any:
         """
         # TODO: Write Docstring!
         """
 
-        path: str = os.path.join(config.SQL_PATH, script)
+        sql_query: str = DatabaseManager._load_query(script)
 
-        if not os.path.exists(path):
-            raise FileNotFoundError(f"Script: {script} does not exist.")
+        with sqlite3.connect(config.DATABASE_PATH) as connector:
+            cursor: sqlite3.Cursor = connector.cursor()
 
-        file_contents: str
-        with open(path) as file:
-            file_contents = file.read()
-        
-        file_contents = file_contents.format(**kwargs)
+            cursor.execute(sql_query, kwargs)
 
-        DatabaseManager._cursor.executescript(file_contents)
+            return cursor.fetchall()
 
-        DatabaseManager._connection.commit()
+    @staticmethod
+    def execute_script(script: str) -> None:
+        """
+        # TODO: Write Docstring!
+        """
+
+        sql_query: str = DatabaseManager._load_query(script)
+
+        with sqlite3.connect(config.DATABASE_PATH) as connector:
+            cursor: sqlite3.Cursor = connector.cursor()
+
+            cursor.executescript(sql_query)
+
+            connector.commit()

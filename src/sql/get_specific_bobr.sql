@@ -1,1 +1,0 @@
-SELECT Bobr.name from Bobr WHERE Bobr.id = {bobr_id};
