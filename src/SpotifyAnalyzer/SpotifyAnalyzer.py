@@ -3,6 +3,7 @@
 """
 
 import bcrypt
+import os
 from flask import Flask, render_template, session, redirect, Response, request
 from typing import Any, Callable
 import SpotifyAnalyzer.config as config
@@ -43,7 +44,7 @@ class SpotifyAnalyzer:
         """
         # Runs the main application.
         """
-        
+
         SpotifyAnalyzer.app.config["SECRET_KEY"] = config.FLASK_SECRET_KEY
 
         DatabaseManager.frun("create_db.sql")
@@ -66,7 +67,7 @@ class SpotifyAnalyzer:
 
     @staticmethod
     @app.route("/login", methods=["GET", "POST"])
-    def login() -> str | Response:
+    def login() -> str | Response | dict[str, Any]:
         """
         # TODO: Write Docstring!
         """
@@ -92,16 +93,18 @@ class SpotifyAnalyzer:
             return {'success': False, 'reason': "You nameless or something?"}
 
         if data.get('type') == 'SIGNUP':
-            if DatabaseManager.fget("add_user.sql"):
+            print(DatabaseManager.fget("get_user.sql", username=username))
+
+            if DatabaseManager.fget("get_user.sql", username=username):
                 return {'success': False, 'reason': "User already exists."}  # TODO: Test is this special sauce actually works
 
             password_bytes: bytes = password.encode('utf-8') 
 
             salt: bytes = bcrypt.gensalt() 
 
-            hash: bytes = bcrypt.hashpw(password_bytes, salt)
+            password_hash: bytes = bcrypt.hashpw(password_bytes, salt)
 
-            decoded_hash: str = hash.decode('utf-8')
+            decoded_hash: str = password_hash.decode('utf-8')
 
             DatabaseManager.frun("add_user.sql", username=username, password=decoded_hash)
         else:
