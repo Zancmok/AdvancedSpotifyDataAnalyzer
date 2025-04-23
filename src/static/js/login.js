@@ -46,6 +46,14 @@ function signupPress(event){
 	})
 	.then(data => {
 		console.log("Server response:", data);
+		if (data.success) {
+			matchPass.textContent = "✅ Account succesfully created";
+			matchPass.style.color = "green";
+		}
+		else {
+			matchPass.textContent = `❌ ${data.reason}`;
+			matchPass.style.color = "red";
+		}
 	})
 	.catch(err => {
 		console.error("Fetch error:", err);
