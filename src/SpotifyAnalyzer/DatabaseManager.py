@@ -3,10 +3,10 @@
 """
 
 import os
-from typing import Any, Optional
+from typing import Any
 import SpotifyAnalyzer.config as config
 import sqlite3
-from sqlite3 import Cursor, Connection
+from sqlite3 import Cursor
 
 
 class DatabaseManager:
@@ -39,7 +39,7 @@ class DatabaseManager:
         sql_query: str = DatabaseManager._load_query(script)
 
         with sqlite3.connect(config.DATABASE_PATH) as connector:
-            cursor: sqlite3.Cursor = connector.cursor()
+            cursor: Cursor = connector.cursor()
 
             cursor.execute(sql_query, kwargs)
 
