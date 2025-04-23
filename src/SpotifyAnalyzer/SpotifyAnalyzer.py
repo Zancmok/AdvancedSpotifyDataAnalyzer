@@ -33,7 +33,7 @@ class SpotifyAnalyzer:
             if not session.get("key"):
                 return redirect("/login")
             
-            function(*args, **kwargs)
+            return function(*args, **kwargs)
 
         return inner
 
@@ -79,3 +79,5 @@ class SpotifyAnalyzer:
         data: dict[str, Any] = request.get_json()
 
         print(data)
+        
+        return {"worky worky pwease dwaddy :pleading_face::tone_5:": True}, 200

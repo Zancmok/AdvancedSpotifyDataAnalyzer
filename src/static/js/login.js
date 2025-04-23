@@ -1,7 +1,8 @@
 const signupPassword = document.getElementById("signup-password")
 const confirmPassword = document.getElementById("confirm-password")
 const matchPass = document.getElementById("matchPass");
-	
+const form = document.getElementById("kurwaForm")
+
 function comparePasswords() {
 	if (signupPassword.value === "" && confirmPassword.value === "") {
 		matchPass.textContent = "";
@@ -17,19 +18,15 @@ function comparePasswords() {
 signupPassword.addEventListener("input", comparePasswords);
 confirmPassword.addEventListener("input", comparePasswords);
 
-const signup_data = {
-	type: "SIGNUP",
-	name: document.getElementById("signup-name").value,
-	password: signupPassword
-};
-
 const login_data = {
 	type: "LOGIN",
 	name: document.getElementById("login-name").value,
 	password: document.getElementById("login-password").value
 };
 
-function signupPress(){
+function signupPress(event){
+	event.preventDefault();
+	
 	if (signupPassword.value === "" && confirmPassword.value === "") {
 		return;
 	} else if (signupPassword.value !== confirmPassword.value) {
@@ -39,14 +36,26 @@ function signupPress(){
 	let signup_data = {
 		type: "SIGNUP",
 		name: document.getElementById("signup-name").value,
-		password: signupPassword
+		password: signupPassword.value
 	};
 
-	fetch('http://localhost:5000/login', {
+	fetch('http://127.0.0.1:5000/login', {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
 		},
 		body: JSON.stringify(signup_data)
 	})
+	.then(res => {
+		if (!res.ok) throw new Error(`Server error ${res.status}`);
+		return res.json();
+	})
+	.then(data => {
+		console.log("Server response:", data);
+	})
+	.catch(err => {
+		console.error("Fetch error:", err);
+	});
 }
+
+form.addEventListener("submit", signupPress)
