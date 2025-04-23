@@ -1,15 +1,15 @@
-CREATE TABLE User (
+CREATE TABLE IF NOT EXISTS User (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     username TEXT,
     password TEXT
 );
 
-CREATE TABLE Genre (
+CREATE TABLE IF NOT EXISTS Genre (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT
 );
 
-CREATE TABLE Author (
+CREATE TABLE IF NOT EXISTS Author (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     genre_id INTEGER,
     name TEXT,
@@ -18,7 +18,7 @@ CREATE TABLE Author (
     FOREIGN KEY (genre_id) REFERENCES Genre(id)
 );
 
-CREATE TABLE AuthorGenre (
+CREATE TABLE IF NOT EXISTS AuthorGenre (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     author_id INTEGER,
     genre_id INTEGER,
@@ -26,7 +26,7 @@ CREATE TABLE AuthorGenre (
     FOREIGN KEY (genre_id) REFERENCES Genre(id)
 );
 
-CREATE TABLE Album (
+CREATE TABLE IF NOT EXISTS Album (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     author_id INTEGER,
     spotify_uri TEXT,
@@ -36,7 +36,7 @@ CREATE TABLE Album (
     FOREIGN KEY (author_id) REFERENCES Author(id)
 );
 
-CREATE TABLE Song (
+CREATE TABLE IF NOT EXISTS Song (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     album_id INTEGER,
     name TEXT,
@@ -44,7 +44,7 @@ CREATE TABLE Song (
     FOREIGN KEY (album_id) REFERENCES Album(id)
 );
 
-CREATE TABLE SongListen (
+CREATE TABLE IF NOT EXISTS SongListen (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INTEGER,
     song_id INTEGER,

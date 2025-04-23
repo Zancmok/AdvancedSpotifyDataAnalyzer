@@ -2,6 +2,7 @@
 # TODO: Write Docstring!
 """
 
+import bcrypt
 from flask import Flask, render_template, session, redirect, Response, request
 from typing import Any, Callable
 import SpotifyAnalyzer.config as config
@@ -45,7 +46,7 @@ class SpotifyAnalyzer:
         
         SpotifyAnalyzer.app.config["SECRET_KEY"] = config.FLASK_SECRET_KEY
 
-        # DatabaseManager.frun("create_db.sql")
+        DatabaseManager.frun("create_db.sql")
 
         SpotifyAnalyzer.app.run(
             host=config.HOST,
@@ -77,7 +78,31 @@ class SpotifyAnalyzer:
             return render_template("loginAndSignup.html")
 
         data: dict[str, Any] = request.get_json()
-
-        print(data)
         
-        return {"worky worky pwease dwaddy :pleading_face::tone_5:": True}, 200
+        if not data or not data.get('type'):
+            return {'success': False, 'reason': "Nigga tf you doin"}
+
+        password: str = data.get('password')
+        username: str = data.get('name')
+
+        if not password:
+            return {'success': False, 'reason': "Men, why no password ):"}
+
+        if not username:
+            return {'success': False, 'reason': "You nameless or something?"}
+
+        if data.get('type') == 'SIGNUP':
+            if DatabaseManager.fget("add_user.sql"):
+                return {'success': False, 'reason': "User already exists."}  # TODO: Test is this special sauce actually works
+
+            password_bytes: bytes = password.encode('utf-8') 
+
+            salt: bytes = bcrypt.gensalt() 
+
+            hash: bytes = bcrypt.hashpw(password_bytes, salt)
+
+            decoded_hash: str = hash.decode('utf-8')
+
+            DatabaseManager.frun("add_user.sql", username=username, password=decoded_hash)
+        else:
+            pass
