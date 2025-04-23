@@ -93,14 +93,12 @@ class SpotifyAnalyzer:
             return {'success': False, 'reason': "You nameless or something?"}
 
         if data.get('type') == 'SIGNUP':
-            print(DatabaseManager.run_query("get_user.sql", username=username))
-
             if DatabaseManager.run_query("get_user.sql", username=username):
                 return {'success': False, 'reason': "User already exists."}  # TODO: Test is this special sauce actually works
 
             password_bytes: bytes = password.encode('utf-8') 
 
-            salt: bytes = bcrypt.gensalt() 
+            salt: bytes = bcrypt.gensalt()
 
             password_hash: bytes = bcrypt.hashpw(password_bytes, salt)
 
