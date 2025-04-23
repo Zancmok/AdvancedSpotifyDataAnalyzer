@@ -18,12 +18,6 @@ function comparePasswords() {
 signupPassword.addEventListener("input", comparePasswords);
 confirmPassword.addEventListener("input", comparePasswords);
 
-const login_data = {
-	type: "LOGIN",
-	name: document.getElementById("login-name").value,
-	password: document.getElementById("login-password").value
-};
-
 function signupPress(event){
 	event.preventDefault();
 	
@@ -59,3 +53,33 @@ function signupPress(event){
 }
 
 form.addEventListener("submit", signupPress)
+
+
+function loginPress(event){
+	event.preventDefault();
+
+	const login_data = {
+		type: "LOGIN",
+		name: document.getElementById("login-name").value,
+		password: document.getElementById("login-password").value
+	};
+
+	fetch('http://127.0.0.1:5000/login', {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json',
+		},
+		body: JSON.stringify(login_data)
+	})
+	.then(res => {
+		if (!res.ok) throw new Error(`Server error ${res.status}`);
+		return res.json();
+	})
+	.then(data => {
+		// bim bim bam password stuff
+		console.log("Server response:", data);
+	})
+	.catch(err => {
+		console.error("Fetch error:", err);
+	});
+}
