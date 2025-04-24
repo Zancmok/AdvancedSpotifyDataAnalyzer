@@ -1,3 +1,4 @@
+const logout = document.getElementById("but");
 function logoutPress(event){
 	event.preventDefault();
 
@@ -27,4 +28,4 @@ function logoutPress(event){
 		console.error("Fetch error:", err);
 	});
 }
-login.addEventListener("submit", logoutPress)
+logout.addEventListener("submit", logoutPress)
