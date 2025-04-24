@@ -22,24 +22,6 @@ class SpotifyAnalyzer:
     )
 
     @staticmethod
-    def required_login(function: Callable) -> Callable:
-        """
-        # TODO: Write Docstring!
-        """
-
-        def inner(*args, **kwargs) -> Any:
-            """
-            # TODO: Write Docstring!
-            """
-            
-            if not session.get("key"):
-                return redirect("/login")
-            
-            return function(*args, **kwargs)
-
-        return inner
-
-    @staticmethod
     def run() -> None:
         """
         # Runs the main application.
@@ -56,12 +38,14 @@ class SpotifyAnalyzer:
         )
 
     @staticmethod
-    @required_login
     @app.route("/")
     def index() -> str | Response:
         """
         # TODO: Write Docstring!
         """
+
+        if not session.get("key"):
+            return redirect("/login")
 
         return render_template("index.html")
 
@@ -113,7 +97,8 @@ class SpotifyAnalyzer:
             if not database_user:
                 return {'success': False, 'reason': "User does not exist."}
 
-            encoded_user_hash: bytes = database_user[2].encode('utf-8')
+            # [0] is the first and only field, [2] is the password in the said user field 
+            encoded_user_hash: bytes = database_user[0][2].encode('utf-8')
 
             password_bytes: bytes = password.encode('utf-8')
 
