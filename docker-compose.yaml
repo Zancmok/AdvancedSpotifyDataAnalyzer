@@ -1,0 +1,15 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: spotify-analyzer-app
+    ports:
+      - "5000:5000"
+    volumes:
+      - sqlite_data:/app/database
+    working_dir: /app
+    image: spotify-analyzer:latest
+
+volumes:
+  sqlite_data:
