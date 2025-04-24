@@ -28,4 +28,4 @@ function logoutPress(event){
 		console.error("Fetch error:", err);
 	});
 }
-logout.addEventListener("submit", logoutPress)
+logout.addEventListener("click", logoutPress)
