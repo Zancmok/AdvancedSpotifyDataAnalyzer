@@ -56,8 +56,8 @@ class SpotifyAnalyzer:
         )
 
     @staticmethod
-    @app.route("/")
     @required_login
+    @app.route("/")
     def index() -> str | Response:
         """
         # TODO: Write Docstring!
@@ -94,7 +94,7 @@ class SpotifyAnalyzer:
 
         if data.get('type') == 'SIGNUP':
             if DatabaseManager.run_query("get_user.sql", username=username):
-                return {'success': False, 'reason': "User already exists."}  # TODO: Test is this special sauce actually works
+                return {'success': False, 'reason': "User already exists."}
 
             password_bytes: bytes = password.encode('utf-8') 
 
@@ -108,4 +108,18 @@ class SpotifyAnalyzer:
 
             return {'success': True, 'reason': ""}
         else:
-            return {'success': False, 'reason': "Code not implemented yet."}
+            database_user: list[tuple[int | str, ...]] = DatabaseManager.run_query("get_user.sql", username=username)
+
+            if not database_user:
+                return {'success': False, 'reason': "User does not exist."}
+
+            encoded_user_hash: bytes = database_user[2].encode('utf-8')
+
+            password_bytes: bytes = password.encode('utf-8')
+
+            if bcrypt.checkpw(password_bytes, encoded_user_hash):
+                session["key"] = True
+
+                return {'success': True, 'reason': ""}
+            else:
+                return {'success': False, 'reason': "Password not correct."}
