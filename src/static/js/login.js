@@ -1,6 +1,7 @@
 const signupPassword = document.getElementById("signup-password")
 const confirmPassword = document.getElementById("confirm-password")
 const matchPass = document.getElementById("matchPass");
+const loginShit = document.getElementById("loginWork")
 const form = document.getElementById("kurwaForm");
 const login = document.getElementById("login-stuff");
 
@@ -89,8 +90,8 @@ function loginPress(event){
 		if (data.success){
 			window.location.assign(homePageUrl);
 		} else{
-			matchPass.textContent = `❌ ${data.reason}`;
-			matchPass.style.color = "red";
+			loginShit.textContent = `❌ ${data.reason}`;
+			loginShit.style.color = "red";
 		}
 	})
 	.catch(err => {
