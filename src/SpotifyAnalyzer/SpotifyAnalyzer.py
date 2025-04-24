@@ -108,3 +108,14 @@ class SpotifyAnalyzer:
                 return {'success': True, 'reason': ""}
             else:
                 return {'success': False, 'reason': "Password not correct."}
+
+    @staticmethod
+    @app.route("/logout", methods=["POST"])
+    def logout() -> Response | dict[str, Any]:
+        """
+        # TODO: Write Docstring!
+        """
+
+        session["key"] = False
+
+        return {'success': True}
