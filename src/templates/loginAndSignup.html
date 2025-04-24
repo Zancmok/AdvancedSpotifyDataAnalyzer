@@ -50,7 +50,7 @@
 
           <!-- Login Form -->
           <div class="tab-pane fade" id="login" role="tabpanel" aria-labelledby="login-tab">
-            <form>
+            <form id="login-stuff">
               <div class="mb-3">
                 <label for="login-name" class="form-label">Username</label>
                 <input type="text" class="form-control" id="login-name" required>
@@ -71,6 +71,7 @@
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script>
+        const homePageUrl = "{{ url_for('/') }}";
         const loginUrl = "{{ url_for('login') }}";
     </script>
     <script src="../static/js/login.js"></script>

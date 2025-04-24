@@ -1,7 +1,8 @@
 const signupPassword = document.getElementById("signup-password")
 const confirmPassword = document.getElementById("confirm-password")
 const matchPass = document.getElementById("matchPass");
-const form = document.getElementById("kurwaForm")
+const form = document.getElementById("kurwaForm");
+const login = document.getElementById("login-stuff");
 
 function comparePasswords() {
 	if (signupPassword.value === "" && confirmPassword.value === "") {
@@ -72,7 +73,7 @@ function loginPress(event){
 		password: document.getElementById("login-password").value
 	};
 
-	fetch(loginUrl, { // Make this IP somehow dynamic
+	fetch(loginUrl, { // Made this IP somehow dynamic
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
@@ -84,10 +85,16 @@ function loginPress(event){
 		return res.json();
 	})
 	.then(data => {
-		// bim bim bam password stuff
 		console.log("Server response:", data);
+		if (data.success){
+			window.location.assign(homePageUrl);
+		} else{
+			matchPass.textContent = `❌ ${data.reason}`;
+			matchPass.style.color = "red";
+		}
 	})
 	.catch(err => {
 		console.error("Fetch error:", err);
 	});
 }
+login.addEventListener("submit", loginPress)
