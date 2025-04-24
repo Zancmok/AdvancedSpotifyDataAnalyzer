@@ -72,7 +72,7 @@ function loginPress(event){
 		password: document.getElementById("login-password").value
 	};
 
-	fetch('http://127.0.0.1:5000/login', { // Make this IP somehow dynamic
+	fetch(loginUrl, { // Make this IP somehow dynamic
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
