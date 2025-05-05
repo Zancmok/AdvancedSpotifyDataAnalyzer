@@ -15,15 +15,10 @@
 		<div class="header">
 			<div class="container">
 				<div class="d-flex justify-content-between align-items-center">
-					<h2>Spotify Analyzer</h2>
+					<h2><a href="index.html" style="text-decoration:none;color:green">Spotify Analyzer</a></h2>
 					<nav>
 						<ul class="nav">
-							<li class="nav-item">
-								<a class="nav-link" href="#">Dashboard</a>
-							</li>
-							<li class="nav-item">
-								<a class="nav-link" href="#">Analytics</a>
-							</li>
+
 							<li class="nav-item">
 								<a class="nav-link active" href="#">Settings</a>
 							</li>
@@ -48,13 +43,7 @@
 								<a class="nav-link active" id="account-tab" data-bs-toggle="tab" href="#account" role="tab" aria-controls="account" aria-selected="true">Account</a>
 							</li>
 							<li class="nav-item" role="presentation">
-								<a class="nav-link" id="preferences-tab" data-bs-toggle="tab" href="#preferences" role="tab" aria-controls="preferences" aria-selected="false">Preferences</a>
-							</li>
-							<li class="nav-item" role="presentation">
 								<a class="nav-link" id="spotify-tab" data-bs-toggle="tab" href="#spotify" role="tab" aria-controls="spotify" aria-selected="false">Spotify Connection</a>
-							</li>
-							<li class="nav-item" role="presentation">
-								<a class="nav-link" id="privacy-tab" data-bs-toggle="tab" href="#privacy" role="tab" aria-controls="privacy" aria-selected="false">Privacy</a>
 							</li>
 						</ul>
 						
@@ -71,7 +60,7 @@
 								<form>
 									<div class="mb-3">
 										<label for="username" class="form-label">Username</label>
-										<input type="text" class="form-control" id="username" value="CurrentUsername">
+										<input type="text" class="form-control" id="username" placeholder="CurrentUsername">
 									</div>
 									<div class="mb-3">
 										<label for="current-password" class="form-label">Current Password</label>
@@ -92,60 +81,18 @@
 								</form>
 							</div>
 							
-							<!-- Preferences Settings -->
-							<div class="tab-pane fade" id="preferences" role="tabpanel" aria-labelledby="preferences-tab">
-								<form>
-									<div class="mb-3">
-										<label class="form-label">Analytics Display</label>
-										<div class="form-check">
-											<input class="form-check-input" type="checkbox" id="show-artists" checked>
-											<label class="form-check-label" for="show-artists">
-												Show Top Artists
-											</label>
-										</div>
-										<div class="form-check">
-											<input class="form-check-input" type="checkbox" id="show-tracks" checked>
-											<label class="form-check-label" for="show-tracks">
-												Show Top Tracks
-											</label>
-										</div>
-										<div class="form-check">
-											<input class="form-check-input" type="checkbox" id="show-genres" checked>
-											<label class="form-check-label" for="show-genres">
-												Show Favorite Genres
-											</label>
-										</div>
-										<div class="form-check">
-											<input class="form-check-input" type="checkbox" id="show-listening-habits" checked>
-											<label class="form-check-label" for="show-listening-habits">
-												Show Listening Habits
-											</label>
-										</div>
-									</div>
-									
-									<div class="d-grid gap-2">
-										<button type="submit" class="btn btn-success">Save Preferences</button>
-									</div>
-								</form>
-							</div>
 							
 							<!-- Spotify Connection -->
 							<div class="tab-pane fade" id="spotify" role="tabpanel" aria-labelledby="spotify-tab">
 								<div class="empty-tab-content">
-									<div class="empty-tab-icon">🎵</div>
-									<h5>Spotify Connection Settings</h5>
-									<p class="text-muted">Spotify connection settings are currently not available.</p>
+									<input type="file" id="zipFile" accept=".zip">
+									<br>
+									<br>
+									<button onclick="uploadZip()">Upload</button>
 								</div>
 							</div>
 							
-							<!-- Privacy Settings -->
-							<div class="tab-pane fade" id="privacy" role="tabpanel" aria-labelledby="privacy-tab">
-								<div class="empty-tab-content">
-									<div class="empty-tab-icon">🔒</div>
-									<h5>Privacy Settings</h5>
-									<p class="text-muted">Privacy settings are currently not available.</p>
-								</div>
-							</div>
+							
 						</div>
 					</div>
 				</div>
