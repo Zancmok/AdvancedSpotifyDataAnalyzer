@@ -66,8 +66,12 @@ function userDataChange(event){
 		formData.append("pfp",null);
 	}
 
-	formData.append("old_Password", document.getElementById("current-password").value);
-    formData.append("new_Password", newPassword.value);
+	var usernameChanged = document.getElementById("new-username").value.lenght > 3;
+
+	formData.append("old_password", document.getElementById("current-password").value);
+	formData.append("new_username", document.getElementById("new-username").value)
+	formData.append("username_changed", usernameChanged);
+    formData.append("new_password", newPassword.value);
     formData.append("password_changed", passwordChanged);
     formData.append("pfp_changed", pfpChanged);
 
