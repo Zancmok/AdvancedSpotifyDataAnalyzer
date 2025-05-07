@@ -1,9 +1,11 @@
 """
 # TODO: Write Docstring!
 """
+import json
 
 import bcrypt
 import os
+import zipfile
 from flask import Flask, render_template, session, redirect, Response, request
 from werkzeug.datastructures.file_storage import FileStorage
 from typing import Any, Callable
@@ -45,7 +47,7 @@ class SpotifyAnalyzer:
         # TODO: Write Docstring!
         """
 
-        if not session.get("key"):
+        if not session.get("user"):
             return redirect("/login")
 
         return render_template("index.html")
@@ -57,7 +59,7 @@ class SpotifyAnalyzer:
         # TODO: Write Docstring!
         """
 
-        if session.get("key"):
+        if session.get("user"):
             return redirect("/")
 
         if request.method == "GET":
@@ -104,7 +106,8 @@ class SpotifyAnalyzer:
             password_bytes: bytes = password.encode('utf-8')
 
             if bcrypt.checkpw(password_bytes, encoded_user_hash):
-                session["key"] = True
+                # [0] is the first and only field, [0] is the user_id in the said user field
+                session["user"] = database_user[0][0]
 
                 return {'success': True, 'reason': ""}
             else:
@@ -117,9 +120,9 @@ class SpotifyAnalyzer:
         # TODO: Write Docstring!
         """
 
-        session["key"] = False
+        session["user"] = None
 
-        return {'success': True}
+        return {'success': True, 'reason': ""}
 
     @staticmethod
     @app.route("/settings", methods=["GET", "POST"])
@@ -128,7 +131,7 @@ class SpotifyAnalyzer:
         # TODO: Write Docstring!
         """
 
-        if not session.get("key"):
+        if not session.get("user"):
             return redirect("/login")
 
         if request.method == "GET":
@@ -148,8 +151,45 @@ class SpotifyAnalyzer:
         """
 
         if 'file' not in request.files:
-            return {'success': False, 'reason': 'No file part'}
+            return {'success': False, 'reason': "No file part"}
 
         file: FileStorage = request.files['file']
+
+        if not zipfile.is_zipfile(file.stream):
+            return {'success': False, 'reason': "Not a zip file"}
+        file.stream.seek(0)
+
+        with zipfile.ZipFile(file.stream) as zipped_file:
+            file_list: list[str] = zipped_file.namelist()
+
+            json_files: list[str] = []
+
+            for file_name in file_list:
+                if not file_name.endswith('.json'):
+                    continue
+
+                with zipped_file.open(file_name) as zf:
+                    is_json: bool = True
+
+                    try:
+                        json.load(zf)
+                    except (json.JSONDecodeError, ValueError):
+                        is_json = False
+
+                if is_json:
+                    json_files.append(file_name)
+
+            for json_file in json_files:
+                with zipped_file.open(json_file) as zf:
+                    data: Any = json.load(zf)
+
+                    if type(data) is not list:
+                        continue
+
+                    for listen in data:
+                        if type(listen) is not dict:
+                            continue
+
+                        print(listen, flush=True)
 
         return {'success': False, 'reason': "Not implemented yet"}
