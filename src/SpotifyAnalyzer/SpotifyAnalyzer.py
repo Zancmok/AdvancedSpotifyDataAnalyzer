@@ -11,6 +11,7 @@ from werkzeug.datastructures.file_storage import FileStorage
 from typing import Any, Callable
 import SpotifyAnalyzer.config as config
 from SpotifyAnalyzer.DatabaseManager import DatabaseManager
+from SpotifyAnalyzer.TrackManager import TrackManager
 
 
 class SpotifyAnalyzer:
@@ -33,6 +34,8 @@ class SpotifyAnalyzer:
         SpotifyAnalyzer.app.config["SECRET_KEY"] = config.FLASK_SECRET_KEY
 
         DatabaseManager.execute_script("create_db.sql")
+
+        TrackManager.init()
 
         SpotifyAnalyzer.app.run(
             host=config.HOST,
@@ -66,7 +69,7 @@ class SpotifyAnalyzer:
             return render_template("loginAndSignup.html")
 
         data: dict[str, Any] = request.get_json()
-        
+
         if not data or not data.get('type'):
             return {'success': False, 'reason': "Nigga tf you doin"}
 
@@ -83,7 +86,7 @@ class SpotifyAnalyzer:
             if DatabaseManager.run_query("get_user.sql", username=username):
                 return {'success': False, 'reason': "User already exists."}
 
-            password_bytes: bytes = password.encode('utf-8') 
+            password_bytes: bytes = password.encode('utf-8')
 
             salt: bytes = bcrypt.gensalt()
 
@@ -136,7 +139,7 @@ class SpotifyAnalyzer:
 
         if request.method == "GET":
             return render_template("settings.html")
-        
+
         data: dict[str, Any] = request.files
 
         print(request.files, flush=True)
@@ -160,36 +163,6 @@ class SpotifyAnalyzer:
         file.stream.seek(0)
 
         with zipfile.ZipFile(file.stream) as zipped_file:
-            file_list: list[str] = zipped_file.namelist()
+            TrackManager.process(zipped_file)
 
-            json_files: list[str] = []
-
-            for file_name in file_list:
-                if not file_name.endswith('.json'):
-                    continue
-
-                with zipped_file.open(file_name) as zf:
-                    is_json: bool = True
-
-                    try:
-                        json.load(zf)
-                    except (json.JSONDecodeError, ValueError):
-                        is_json = False
-
-                if is_json:
-                    json_files.append(file_name)
-
-            for json_file in json_files:
-                with zipped_file.open(json_file) as zf:
-                    data: Any = json.load(zf)
-
-                    if type(data) is not list:
-                        continue
-
-                    for listen in data:
-                        if type(listen) is not dict:
-                            continue
-
-                        print(listen, flush=True)
-
-        return {'success': False, 'reason': "Not implemented yet"}
+        return {'success': True, 'reason': ""}
