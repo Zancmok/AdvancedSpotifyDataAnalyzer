@@ -1,6 +1,7 @@
 const newPassword = document.getElementById("new-password")
 const confirmNewPassword = document.getElementById("confirm-new-password")
 const matchPass = document.getElementById("passwordMatch");
+const ChangeData = document.getElementById("user-data");
 	
 function comparePasswords() {
 	if (newPassword.value === "" && confirmNewPassword.value === "") {
@@ -45,3 +46,47 @@ function uploadZip() {
 		alert('An error occurred while uploading the file.');
 	});
 }
+
+function userDataChange(event){
+	event.preventDefault();
+	var passwordChanged = true
+	if (newPassword.value === "" && confirmNewPassword.value === "") {
+		passwordChanged = false;
+	} else if (newPassword.value !== confirmNewPassword.value) {
+		passwordChanged = false
+	}
+	const pfpChanged = fileInput.files.length > 0;
+	const formData = new FormData();
+
+	if (pfpChanged) {
+        formData.append("pfp", fileInput.files[0]);
+    }
+	else
+	{
+		formData.append("pfp",null);
+	}
+
+	formData.append("old_Password", document.getElementById("current-password").value);
+    formData.append("new_Password", newPassword.value);
+    formData.append("password_changed", passwordChanged);
+    formData.append("pfp_changed", pfpChanged);
+
+	fetch(settingUrl, {
+        method: "POST",
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert("User data updated successfully!");
+        } else {
+            alert(data.reason);
+        }
+    })
+    .catch(error => {
+        console.error("Error:", error);
+        alert("An error occurred while updating the user data.");
+    });
+
+}
+ChangeData.addEventListener("submit", userDataChange)

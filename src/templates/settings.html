@@ -59,7 +59,7 @@
 									<input type="file" id="fileInput" accept="image/*">
 								</div>
 								
-								<form>
+								<form id="user-data">
 									<div class="mb-3">
 										<label for="username" class="form-label">Username</label>
 										<input type="text" class="form-control" id="username" placeholder="CurrentUsername">
@@ -137,6 +137,7 @@
 		<script>
 			const logoutUrl = "{{ url_for('logout')}}"
 			const zipUploadUrl = "{{ url_for('data_upload')}}"
+			const settingUrl = "{{ url_for('settings')}}"
 		</script>
 
 		<script src="../static/js/settings.js"></script>
