@@ -52,9 +52,11 @@
 							<div class="tab-pane fade show active" id="account" role="tabpanel" aria-labelledby="account-tab">
 								<div class="text-center mb-4">
 									<div class="profile-pic">
-										<span class="profile-pic-placeholder">👤</span>
+										<img id="profileImage" src="{{ profile_picture }}" alt="Profile Picture" class="rounded-circle" width="150" height="150">
 									</div>
-									<button class="btn btn-outline-light btn-sm mb-3">Change Photo</button>
+									<button class="btn btn-outline-light btn-sm mb-3" id="change-photo-btn">Change Photo</button>
+									<!-- Hidden file input for selecting a new profile picture -->
+									<input type="file" id="fileInput" accept="image/*">
 								</div>
 								
 								<form>
