@@ -119,3 +119,28 @@ class SpotifyAnalyzer:
         session["key"] = False
 
         return {'success': True}
+
+    @staticmethod
+    @app.route("/settings", methods=["GET", "POST"])
+    def settings() -> str | Response | dict[str, Any]:
+        """
+        # TODO: Write Docstring!
+        """
+
+        if not session.get("key"):
+            return redirect("/login")
+
+        return render_template("settings.html")
+
+    @staticmethod
+    @app.route("/data-upload", methods=["POST"])
+    def data_upload() -> Response | dict[str, Any]:
+        """
+        # TODO: Write Docstring!
+        """
+
+        data: dict[str, Any] = request.get_json()
+
+        print(data)
+
+        return {'success': False, 'reason': "Not implemented yet"}
