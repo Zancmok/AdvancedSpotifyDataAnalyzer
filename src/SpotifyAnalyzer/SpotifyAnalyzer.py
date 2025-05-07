@@ -131,7 +131,14 @@ class SpotifyAnalyzer:
         if not session.get("key"):
             return redirect("/login")
 
-        return render_template("settings.html")
+        if request.method == "GET":
+            return render_template("settings.html")
+        
+        data: dict[str, Any] = request.files
+
+        print(request.files, flush=True)
+
+        return {'success': False, 'reason': "Not implemented yet"}
 
     @staticmethod
     @app.route("/data-upload", methods=["POST"])
