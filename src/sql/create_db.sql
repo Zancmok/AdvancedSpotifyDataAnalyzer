@@ -1,7 +1,9 @@
 CREATE TABLE IF NOT EXISTS User (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     username TEXT,
-    password TEXT
+    password TEXT,
+    profile_picture BLOB,
+    last_time_uploaded datetime 
 );
 
 CREATE TABLE IF NOT EXISTS Genre (
@@ -61,4 +63,9 @@ CREATE TABLE IF NOT EXISTS SongListen (
     offline_timestamp TEXT,
     FOREIGN KEY (user_id) REFERENCES User(id),
     FOREIGN KEY (song_id) REFERENCES Song(id)
+);
+
+CREATE TABLE IF NOT EXISTS APIQueueElement(
+    id INTEGER,
+    data TEXT
 );
