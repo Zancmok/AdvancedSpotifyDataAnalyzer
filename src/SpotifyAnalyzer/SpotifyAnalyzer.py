@@ -5,6 +5,7 @@
 import bcrypt
 import os
 from flask import Flask, render_template, session, redirect, Response, request
+from werkzeug.datastructures.file_storage import FileStorage
 from typing import Any, Callable
 import SpotifyAnalyzer.config as config
 from SpotifyAnalyzer.DatabaseManager import DatabaseManager
@@ -139,8 +140,9 @@ class SpotifyAnalyzer:
         # TODO: Write Docstring!
         """
 
-        data: dict[str, Any] = request.get_json()
+        if 'file' not in request.files:
+            return {'success': False, 'reason': 'No file part'}
 
-        print(data)
+        file: FileStorage = request.files['file']
 
         return {'success': False, 'reason': "Not implemented yet"}
