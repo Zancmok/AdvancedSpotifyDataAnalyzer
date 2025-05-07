@@ -37,7 +37,7 @@ function uploadZip() {
 		if (data.success) {
 			alert('File uploaded successfully!');
 		} else {
-			alert('Error uploading file.');
+			alert(data.reason);
 		}
 	})
 	.catch(error => {
