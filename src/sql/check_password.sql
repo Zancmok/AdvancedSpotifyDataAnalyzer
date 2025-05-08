@@ -1,0 +1,1 @@
+SELECT COUNT(*) FROM User WHERE id = :id AND password = :password;
