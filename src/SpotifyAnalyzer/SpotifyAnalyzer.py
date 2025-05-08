@@ -95,7 +95,11 @@ class SpotifyAnalyzer:
 
             decoded_hash: str = password_hash.decode('utf-8')
 
-            DatabaseManager.run_query("add_user.sql", username=username, password=decoded_hash)
+            image: bytes
+            with open(config.DEFAULT_ICON_PATH, 'rb') as file:
+                image = file.read()
+
+            DatabaseManager.run_query("add_user.sql", username=username, password=decoded_hash, profile_picture=image)
 
             return {'success': True, 'reason': ""}
         else:
@@ -150,7 +154,33 @@ class SpotifyAnalyzer:
         new_password: str = data.get("new_password")
         password_changed: bool = data.get("password_changed")
         pfp_changed: bool = data.get("pfp_changed")
-        pfp: Any = files.get("pfp")
+        pfp: FileStorage = files.get("pfp")
+ 
+        database_user: list[tuple[int | str, ...]] = DatabaseManager.run_query("get_user_by_id.sql", id=session.get("user"))
+
+        encoded_user_hash: bytes = database_user[0][2].encode('utf-8')
+
+        password_bytes: bytes = old_password.encode('utf-8')
+
+        if not bcrypt.checkpw(password_bytes, encoded_user_hash):
+            return {'success': False, 'reason': "Password not correct"}
+
+        if username_changed and not DatabaseManager.run_query("user_already_exists.sql", username=new_username)[0][0]:
+                DatabaseManager.run_query("change_username.sql", username=new_username, id=session.get("user"))
+
+        if password_changed:
+            password_bytes: bytes = new_password.encode('utf-8')
+
+            salt: bytes = bcrypt.gensalt()
+
+            password_hash: bytes = bcrypt.hashpw(password_bytes, salt)
+
+            decoded_hash: str = password_hash.decode('utf-8')
+
+            DatabaseManager.run_query("change_password.sql", password=decoded_hash, id=session.get("user"))
+
+        if pfp_changed:
+            DatabaseManager.run_query("change_pfp.sql", profile_picture=pfp)  # DO THIS AT HOUZM
 
         return {'success': False, 'reason': "Not implemented yet"}
 
