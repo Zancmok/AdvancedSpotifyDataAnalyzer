@@ -9,10 +9,11 @@ from time import sleep
 from celery import Celery
 from flask import Flask, render_template, session, redirect, Response, request
 from werkzeug.datastructures.file_storage import FileStorage
+from werkzeug.datastructures import ImmutableDict
 from typing import Any, Callable
 import SpotifyAnalyzer.config as config
 from SpotifyAnalyzer.DatabaseManager import DatabaseManager
-from SpotifyAnalyzer.TrackManager import TrackManager
+# from SpotifyAnalyzer.TrackManager import TrackManager
 
 
 class SpotifyAnalyzer:
@@ -140,9 +141,16 @@ class SpotifyAnalyzer:
         if request.method == "GET":
             return render_template("settings.html")
 
-        data: dict[str, Any] = request.files
+        files: ImmutableDict = request.files
+        data: dict[Any, str] = request.form
 
-        print(request.files, flush=True)
+        old_password: str = data.get("old_password")
+        new_username: str = data.get("new_username")
+        username_changed: bool = data.get("username_changed")
+        new_password: str = data.get("new_password")
+        password_changed: bool = data.get("password_changed")
+        pfp_changed: bool = data.get("pfp_changed")
+        pfp: Any = files.get("pfp")
 
         return {'success': False, 'reason': "Not implemented yet"}
 
@@ -165,12 +173,12 @@ class SpotifyAnalyzer:
         with zipfile.ZipFile(file.stream) as zipped_file:
             print("Blyet?", flush=True)
 
-            TrackManager.process(zipped_file)
+            # TrackManager.process(zipped_file)
 
-            print(TrackManager._zip_file_queue.qsize(), flush=True)
+            # print(TrackManager._zip_file_queue.qsize(), flush=True)
 
             sleep(12)
 
-            print(TrackManager._zip_file_queue.qsize(), flush=True)
+            # print(TrackManager._zip_file_queue.qsize(), flush=True)
 
         return {'success': True, 'reason': ""}
