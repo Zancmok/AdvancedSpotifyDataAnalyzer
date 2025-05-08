@@ -77,10 +77,7 @@ function userDataChange(event){
 
 	fetch(settingUrl, {
         method: "POST",
-        body: formData,
-		headers: {
-			'Content-Type': 'application/x-www-form-urlencoded',
-		},
+        body: JSON.stringify(Object.fromEntries(formData))
     })
     .then(response => response.json())
     .then(data => {
