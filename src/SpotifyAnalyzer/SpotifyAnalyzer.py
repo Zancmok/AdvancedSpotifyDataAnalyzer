@@ -1,11 +1,12 @@
 """
 # TODO: Write Docstring!
 """
-import json
 
 import bcrypt
 import os
 import zipfile
+from time import sleep
+from celery import Celery
 from flask import Flask, render_template, session, redirect, Response, request
 from werkzeug.datastructures.file_storage import FileStorage
 from typing import Any, Callable
@@ -35,12 +36,11 @@ class SpotifyAnalyzer:
 
         DatabaseManager.execute_script("create_db.sql")
 
-        TrackManager.init()
-
         SpotifyAnalyzer.app.run(
             host=config.HOST,
             port=config.PORT,
-            debug=config.DEBUG
+            debug=config.DEBUG,
+            threaded=True
         )
 
     @staticmethod
@@ -163,6 +163,14 @@ class SpotifyAnalyzer:
         file.stream.seek(0)
 
         with zipfile.ZipFile(file.stream) as zipped_file:
+            print("Blyet?", flush=True)
+
             TrackManager.process(zipped_file)
+
+            print(TrackManager._zip_file_queue.qsize(), flush=True)
+
+            sleep(12)
+
+            print(TrackManager._zip_file_queue.qsize(), flush=True)
 
         return {'success': True, 'reason': ""}

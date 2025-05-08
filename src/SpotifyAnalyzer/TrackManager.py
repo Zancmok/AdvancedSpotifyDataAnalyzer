@@ -3,8 +3,9 @@
 """
 
 from zipfile import ZipFile
-from threading import Thread
-import threading
+from time import sleep
+from celery import Celery
+from typing import Optional
 
 
 class TrackManager:
@@ -12,15 +13,7 @@ class TrackManager:
     # TODO: Write Docstring!
     """
 
-    _zip_file_queue: list[ZipFile] = []
-
-    @staticmethod
-    def init() -> None:
-        """
-        # TODO: Write Docstring!
-        """
-
-        TrackManager.thread.run()
+    celery: Celery = Celery('spotify_analyzer')
 
     @staticmethod
     def process(zip_file: ZipFile) -> None:
@@ -28,22 +21,15 @@ class TrackManager:
         # TODO: Write Docstring!
         """
 
-        TrackManager._zip_file_queue.append(zip_file)
+        TrackManager._thread_loop.apply_async()
 
     @staticmethod
+    @celery.task
     def _thread_loop() -> None:
         """
         # TODO: Write Docstring!
         """
-
-        while True:
-            if not TrackManager._zip_file_queue:
-                continue
-
-            zip_file: ZipFile = TrackManager._zip_file_queue[0]
-
-            print(zip_file, flush=True)
-
-            TrackManager._zip_file_queue.pop(0)
-
-    thread: Thread = Thread(target=_thread_loop)
+        print(f"Processing zip file", flush=True)
+        
+        sleep(2)  # Simulate processing time
+        print(f"Finished processing", flush=True)
