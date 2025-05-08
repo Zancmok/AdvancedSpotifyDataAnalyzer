@@ -66,7 +66,7 @@ function userDataChange(event){
 		formData.append("pfp",null);
 	}
 
-	var usernameChanged = document.getElementById("new-username").value.lenght > 3;
+	var usernameChanged = document.getElementById("new-username").value.lenght > 0;
 
 	formData.append("old_password", document.getElementById("current-password").value);
 	formData.append("new_username", document.getElementById("new-username").value)
@@ -77,7 +77,10 @@ function userDataChange(event){
 
 	fetch(settingUrl, {
         method: "POST",
-        body: formData
+        body: formData,
+		headers: {
+			'Content-Type': 'application/x-www-form-urlencoded',
+		},
     })
     .then(response => response.json())
     .then(data => {
