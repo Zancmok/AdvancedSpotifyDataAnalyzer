@@ -16,10 +16,6 @@ import SpotifyAnalyzer.celery_tasks as celery_tasks
 
 
 class SpotifyAnalyzer:
-    """
-    # TODO: Write Docstring!
-    """
-
     app: Flask = Flask(
         __name__,
         template_folder=config.TEMPLATES_PATH,
@@ -46,10 +42,6 @@ class SpotifyAnalyzer:
     @staticmethod
     @app.route("/")
     def index() -> str | Response:
-        """
-        # TODO: Write Docstring!
-        """
-
         if not session.get("user"):
             return redirect("/login")
 
@@ -58,10 +50,6 @@ class SpotifyAnalyzer:
     @staticmethod
     @app.route("/login", methods=["GET", "POST"])
     def login() -> str | Response | dict[str, Any]:
-        """
-        # TODO: Write Docstring!
-        """
-
         if session.get("user"):
             return redirect("/")
 
@@ -123,10 +111,6 @@ class SpotifyAnalyzer:
     @staticmethod
     @app.route("/logout", methods=["POST"])
     def logout() -> Response | dict[str, Any]:
-        """
-        # TODO: Write Docstring!
-        """
-
         session["user"] = None
 
         return {'success': True, 'reason': ""}
@@ -134,10 +118,6 @@ class SpotifyAnalyzer:
     @staticmethod
     @app.route("/settings", methods=["GET", "POST"])
     def settings() -> str | Response | dict[str, Any]:
-        """
-        # TODO: Write Docstring!
-        """
-
         if not session.get("user"):
             return redirect("/login")
 
@@ -186,10 +166,6 @@ class SpotifyAnalyzer:
     @staticmethod
     @app.route("/data-upload", methods=["POST"])
     def data_upload() -> Response | dict[str, Any]:
-        """
-        # TODO: Write Docstring!
-        """
-
         if 'file' not in request.files:
             return {'success': False, 'reason': "No file part"}
 
@@ -205,6 +181,9 @@ class SpotifyAnalyzer:
             filename: str = f"{user_id}.zip"
 
             file_path: str = os.path.join(config.UPLOAD_FOLDER, filename)
+
+            if os.path.exists(file_path):
+                return {'success': False, 'reason': "Your file is already in processing!"}
 
             file.save(file_path)
 
