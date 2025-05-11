@@ -1,19 +1,18 @@
 """
 # TODO: Write Docstring!
 """
+import os.path
+from sys import float_info
 
 import bcrypt
-import os
 import zipfile
-from time import sleep
-from celery import Celery
 from flask import Flask, render_template, session, redirect, Response, request
 from werkzeug.datastructures.file_storage import FileStorage
 from werkzeug.datastructures import ImmutableDict
 from typing import Any, Callable
 import SpotifyAnalyzer.config as config
 from SpotifyAnalyzer.DatabaseManager import DatabaseManager
-# from SpotifyAnalyzer.TrackManager import TrackManager
+import SpotifyAnalyzer.celery_tasks as celery_tasks
 
 
 class SpotifyAnalyzer:
@@ -150,10 +149,10 @@ class SpotifyAnalyzer:
 
         old_password: str = data.get("old_password")
         new_username: str = data.get("new_username")
-        username_changed: bool = data.get("username_changed")
+        username_changed: bool = bool(data.get("username_changed"))
         new_password: str = data.get("new_password")
-        password_changed: bool = data.get("password_changed")
-        pfp_changed: bool = data.get("pfp_changed")
+        password_changed: bool = bool(data.get("password_changed"))
+        pfp_changed: bool = bool(data.get("pfp_changed"))
         pfp: FileStorage = files.get("pfp")
  
         database_user: list[tuple[int | str, ...]] = DatabaseManager.run_query("get_user_by_id.sql", id=session.get("user"))
@@ -166,7 +165,7 @@ class SpotifyAnalyzer:
             return {'success': False, 'reason': "Password not correct"}
 
         if username_changed and not DatabaseManager.run_query("user_already_exists.sql", username=new_username)[0][0]:
-                DatabaseManager.run_query("change_username.sql", username=new_username, id=session.get("user"))
+            DatabaseManager.run_query("change_username.sql", username=new_username, id=session.get("user"))
 
         if password_changed:
             password_bytes: bytes = new_password.encode('utf-8')
@@ -200,15 +199,18 @@ class SpotifyAnalyzer:
             return {'success': False, 'reason': "Not a zip file"}
         file.stream.seek(0)
 
-        with zipfile.ZipFile(file.stream) as zipped_file:
-            print("Blyet?", flush=True)
+        user_id: int = session.get("user")
 
-            # TrackManager.process(zipped_file)
+        try:
+            filename: str = f"{user_id}.zip"
 
-            # print(TrackManager._zip_file_queue.qsize(), flush=True)
+            file_path: str = os.path.join(config.UPLOAD_FOLDER, filename)
 
-            sleep(12)
+            file.save(file_path)
 
-            # print(TrackManager._zip_file_queue.qsize(), flush=True)
+            celery_tasks.process.delay(file_path)
+
+        except Exception as e:
+            print(e, flush=True)
 
         return {'success': True, 'reason': ""}

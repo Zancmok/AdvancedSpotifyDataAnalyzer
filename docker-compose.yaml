@@ -1,15 +1,43 @@
+version: "3.8"
+
 services:
   app:
     build:
       context: .
       dockerfile: Dockerfile
     container_name: spotify-analyzer-app
+    image: spotify-analyzer:latest
     ports:
       - "5000:5000"
     volumes:
       - sqlite_data:/app/database
+      - uploads:/app/uploads
     working_dir: /app
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_BACKEND_URL=redis://redis:6379/0
+    depends_on:
+      - redis
+
+  celery:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: spotify-analyzer-celery
     image: spotify-analyzer:latest
+    working_dir: /app
+    command: celery -A SpotifyAnalyzer.celery_tasks.celery worker --loglevel=info
+    environment:
+      - PYTHONPATH=/app/src
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:7
+    container_name: spotify-analyzer-redis
+    ports:
+      - "6379:6379"
 
 volumes:
   sqlite_data:
+  uploads:
