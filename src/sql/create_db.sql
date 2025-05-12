@@ -13,7 +13,6 @@ CREATE TABLE IF NOT EXISTS Genre (
 
 CREATE TABLE IF NOT EXISTS Author (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    genre_id INTEGER,
     name TEXT,
     spotify_uri TEXT,
     img_url TEXT,
