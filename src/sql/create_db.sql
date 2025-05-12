@@ -15,8 +15,7 @@ CREATE TABLE IF NOT EXISTS Author (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT,
     spotify_uri TEXT,
-    img_url TEXT,
-    FOREIGN KEY (genre_id) REFERENCES Genre(id)
+    img_url TEXT
 );
 
 CREATE TABLE IF NOT EXISTS AuthorGenre (
@@ -42,6 +41,7 @@ CREATE TABLE IF NOT EXISTS Song (
     album_id INTEGER,
     name TEXT,
     spotify_uri TEXT,
+    img_url TEXT,
     FOREIGN KEY (album_id) REFERENCES Album(id)
 );
 

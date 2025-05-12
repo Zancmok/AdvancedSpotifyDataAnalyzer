@@ -32,6 +32,10 @@ class SpotifyAnalyzer:
 
         DatabaseManager.execute_script("create_db.sql")
 
+        DatabaseManager.execute_script("create_base_values.sql")
+
+        celery_tasks.spotify_api_process.delay()
+
         SpotifyAnalyzer.app.run(
             host=config.HOST,
             port=config.PORT,
@@ -187,7 +191,9 @@ class SpotifyAnalyzer:
 
             file.save(file_path)
 
-            celery_tasks.process.delay(file_path)
+            # celery_tasks.process.delay(file_path)
+
+            celery_tasks.process(file_path)
 
         except Exception as e:
             print(e, flush=True)

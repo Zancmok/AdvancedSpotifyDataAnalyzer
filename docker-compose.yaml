@@ -26,7 +26,7 @@ services:
       - sqlite_data:/app/database
       - uploads:/app/uploads
     working_dir: /app
-    command: celery -A SpotifyAnalyzer.celery_tasks.celery worker --pool=solo --loglevel=info
+    command: celery -A SpotifyAnalyzer.celery_tasks.celery worker --concurrency=2 --pool=solo --loglevel=info
     environment:
       - PYTHONPATH=/app/src
     depends_on:

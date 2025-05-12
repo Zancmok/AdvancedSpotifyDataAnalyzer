@@ -1,2 +1,2 @@
-INSERT OR IGNORE INTO Genre (name)
+INSERT INTO Genre (name)
 VALUES (:name);
