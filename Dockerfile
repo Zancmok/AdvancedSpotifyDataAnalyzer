@@ -6,6 +6,8 @@ COPY ./src /app/src
 
 COPY requirements.txt /app/
 
+COPY .env /app/
+
 RUN mkdir -p /app/uploads
 
 RUN mkdir -p /app/database && touch /app/database/database.db

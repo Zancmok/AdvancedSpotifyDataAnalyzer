@@ -7,12 +7,20 @@ from celery import Celery
 import SpotifyAnalyzer.config as config
 from SpotifyAnalyzer.DatabaseManager import DatabaseManager
 from flask import session
+from spotipy import Spotify
+from spotipy.oauth2 import SpotifyClientCredentials
+
 
 celery: Celery = Celery(
     'spotify_analyzer',
     broker=config.CELERY_BROKER_URL,
     backend=config.CELERY_BACKEND_URL
 )
+
+spotify: Spotify = Spotify(auth_manager=SpotifyClientCredentials(
+    client_id=config.SPOTIFY_CLIENT_ID,
+    client_secret=config.SPOTIFY_CLIENT_SECRET
+))
 
 _CORRECT_KEYS: list[str] = ['ts', 'platform', 'ms_played', 'conn_country', 'ip_addr', 'master_metadata_track_name',
                             'master_metadata_album_artist_name', 'master_metadata_album_album_name',
@@ -30,7 +38,7 @@ def _validate_json_element(json_element: dict[str, Any]) -> bool:
 
 
 def _validate_song(json_element: dict[Any, str]) -> None:
-    uri: str = json_element.get("spotify_track_uri") or json_element.get("spotify_episode_uri")
+    uri: str = json_element.get("spotify_track_uri")
 
     if not uri:
         return
@@ -38,13 +46,12 @@ def _validate_song(json_element: dict[Any, str]) -> None:
     if DatabaseManager.run_query("exists_song.sql", spotify_uri=uri)[0][0]:
         return
 
-    song_name: str = json_element["master_metadata_track_name"] or json_element["episode_name"]
+    song_name: str = json_element["master_metadata_track_name"]
 
     DatabaseManager.run_query("add_song.sql",
                               album_id=0,
                               name=song_name,
                               spotify_uri=uri,
-                              img_url="https://icons.veryicon.com/png/o/miscellaneous/hfy/temporary-1.png"
                               )
 
     DatabaseManager.run_query("add_queue.sql", data=json.dumps({
@@ -70,7 +77,7 @@ def _analyze_json(zip_file: ZipFile, file: ZipInfo) -> None:
 
         _validate_song(json_element)
 
-        uri: str = json_element.get("spotify_track_uri") or json_element.get("spotify_episode_uri")
+        uri: str = json_element.get("spotify_track_uri")
 
         if not uri:
             continue
@@ -106,15 +113,36 @@ def process(path: str) -> None:
 @celery.task
 def spotify_api_process() -> None:
     while True:
-        elements: list[tuple[int, dict[str, Any]]] = DatabaseManager.run_query("get_queue_first.sql")
+        elements: list[tuple[int, str]] = DatabaseManager.run_query("get_queue_first.sql")
 
         if not elements:
             sleep(10)
 
             continue
 
-        element: dict[str, Any] = elements[0][1]
+        element: dict[str, Any] = json.loads(elements[0][1])
 
-        # print(element, flush=True)
+        if element["element_type"] == "song":
+            element_uri: str = element["element_uri"]
 
-        sleep(.1)
+            try:
+                response: dict[str, Any] = spotify.track(element_uri)
+            except Exception as e:
+                print(e, flush=True)
+                sleep(10)
+                continue
+
+            if DatabaseManager.run_query("exists_album.sql", spotify_uri=element_uri)[0][0]:
+                DatabaseManager.run_query("modify_song_album.sql",
+                                          album_uri=response["album"]["uri"],
+                                          song_uri=element_uri)
+            else:
+                DatabaseManager.run_query("add_queue.sql", data=json.dumps({
+                    "element_type": "album",
+                    "element_uri": response["album"]["uri"]
+                }))
+
+            DatabaseManager.execute_script("pop_queue.sql")
+
+        elif element["element_type"] == "album":
+            print("Oha, album~san yahooo", flush=True)

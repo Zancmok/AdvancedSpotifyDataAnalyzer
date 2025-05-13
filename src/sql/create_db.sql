@@ -41,7 +41,6 @@ CREATE TABLE IF NOT EXISTS Song (
     album_id INTEGER,
     name TEXT,
     spotify_uri TEXT,
-    img_url TEXT,
     FOREIGN KEY (album_id) REFERENCES Album(id)
 );
 
