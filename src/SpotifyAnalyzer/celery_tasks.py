@@ -122,9 +122,9 @@ def spotify_api_process() -> None:
 
         element: dict[str, Any] = json.loads(elements[0][1])
 
-        if element["element_type"] == "song":
-            element_uri: str = element["element_uri"]
+        element_uri: str = element["element_uri"]
 
+        if element["element_type"] == "song":
             try:
                 response: dict[str, Any] = spotify.track(element_uri)
             except Exception as e:
@@ -132,7 +132,7 @@ def spotify_api_process() -> None:
                 sleep(10)
                 continue
 
-            if DatabaseManager.run_query("exists_album.sql", spotify_uri=element_uri)[0][0]:
+            if DatabaseManager.run_query("exists_album.sql", spotify_uri=response["album"]["uri"])[0][0]:
                 DatabaseManager.run_query("modify_song_album.sql",
                                           album_uri=response["album"]["uri"],
                                           song_uri=element_uri)
@@ -145,4 +145,19 @@ def spotify_api_process() -> None:
             DatabaseManager.execute_script("pop_queue.sql")
 
         elif element["element_type"] == "album":
-            print("Oha, album~san yahooo", flush=True)
+            try:
+                response: dict[str, Any] = spotify.album(element_uri, market='US')
+            except Exception as e:
+                print(e, flush=True)
+                sleep(10)
+                continue
+
+            DatabaseManager.run_query("modify_song_album.sql",
+                                      album_uri=response["uri"])
+
+            """
+            if DatabaseManager.run_query("exists_author.sql", spotify_uri=element_uri):
+                ...
+            else:
+                ...
+            """
