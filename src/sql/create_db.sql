@@ -13,11 +13,9 @@ CREATE TABLE IF NOT EXISTS Genre (
 
 CREATE TABLE IF NOT EXISTS Author (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    genre_id INTEGER,
     name TEXT,
     spotify_uri TEXT,
-    img_url TEXT,
-    FOREIGN KEY (genre_id) REFERENCES Genre(id)
+    img_url TEXT
 );
 
 CREATE TABLE IF NOT EXISTS AuthorGenre (
@@ -66,6 +64,6 @@ CREATE TABLE IF NOT EXISTS SongListen (
 );
 
 CREATE TABLE IF NOT EXISTS APIQueueElement(
-    id INTEGER,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
     data TEXT
 );
