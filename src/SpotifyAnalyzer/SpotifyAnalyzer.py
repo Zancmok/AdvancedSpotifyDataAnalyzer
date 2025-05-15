@@ -199,3 +199,10 @@ class SpotifyAnalyzer:
             print(e, flush=True)
 
         return {'success': True, 'reason': ""}
+
+    @staticmethod
+    @app.route("/get-main-page-data", methods=["POST"])
+    def get_main_page_data() -> Response | dict[str, Any]:
+        data: dict[Any, str] = request.form
+
+        print(data, flush=True)

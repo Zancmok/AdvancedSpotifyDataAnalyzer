@@ -145,6 +145,8 @@ def spotify_api_process() -> None:
             DatabaseManager.execute_script("pop_queue.sql")
 
         elif element["element_type"] == "album":
+            continue
+        
             try:
                 response: dict[str, Any] = spotify.album(element_uri, market='US')
             except Exception as e:
