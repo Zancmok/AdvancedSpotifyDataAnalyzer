@@ -135,3 +135,26 @@ function updateData() {
         console.error("Fetch error:", err);
     });
 }
+
+function refreshContent() {
+    // Clear all lists
+    document.getElementById("usersList").innerHTML = '';
+    document.getElementById("genresList").innerHTML = '';
+    document.getElementById("creatorsList").innerHTML = '';
+    document.getElementById("albumsList").innerHTML = '';
+
+    // Reset counters
+    counters.users = 0;
+    counters.genres = 0;
+    counters.creators = 0;
+    counters.albums = 0;
+
+    // Optionally, reload default items (you can customize this part as needed)
+    addTopUser();
+    addTopGenre();
+    addTopCreator();
+    addTopAlbum();
+
+    // Reload the data based on the selected date range
+    updateData();
+}
