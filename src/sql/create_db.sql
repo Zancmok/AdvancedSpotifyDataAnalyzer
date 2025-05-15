@@ -59,6 +59,7 @@ CREATE TABLE IF NOT EXISTS SongListen (
     offline INTEGER,
     incognito_mode INTEGER,
     offline_timestamp TEXT,
+    ms_played INTEGER,
     FOREIGN KEY (user_id) REFERENCES User(id),
     FOREIGN KEY (song_id) REFERENCES Song(id)
 );

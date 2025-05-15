@@ -203,6 +203,12 @@ class SpotifyAnalyzer:
     @staticmethod
     @app.route("/get-main-page-data", methods=["POST"])
     def get_main_page_data() -> Response | dict[str, Any]:
-        data: dict[Any, str] = request.form
+        if not session.get("user"):
+            return redirect("/login")
+        
+        data: dict[Any, str] = request.get_json()
 
-        print(data, flush=True)
+        if "start_date" not in data or "end_date" not in data:
+            return {}
+
+        return DatabaseManager.run_query("get_user_listen_times.sql", start_date=data["start_date"], end_date=data["end_date"])

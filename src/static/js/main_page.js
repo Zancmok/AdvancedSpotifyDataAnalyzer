@@ -158,3 +158,5 @@ function refreshContent() {
     // Reload the data based on the selected date range
     updateData();
 }
+
+updateData();
