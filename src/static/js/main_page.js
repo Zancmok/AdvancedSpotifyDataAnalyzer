@@ -60,6 +60,7 @@ function addTopCreator() {
     }
 }
 
+
 function addTopAlbum() {
     if (counters.albums < albums.length) {
         addItemToList("albumsList", albums[counters.albums]);
@@ -69,4 +70,68 @@ function addTopAlbum() {
         addItemToList("albumsList", albums[counters.albums]);
         counters.albums++;
     }
+}
+
+function getDateRangeFromSelection(selection) {
+    const today = new Date();
+    let startDate, endDate;
+
+    endDate = new Date(today); // default to today
+
+    switch (selection) {
+        case "last-month":
+            startDate = new Date(today.getFullYear(), today.getMonth() - 1, today.getDate());
+            break;
+        case "last-year":
+            startDate = new Date(today.getFullYear() - 1, today.getMonth(), today.getDate());
+            break;
+        case "all-time":
+        default:
+            startDate = new Date(1970, 0, 1); // UNIX epoch or a placeholder "start of time"
+            break;
+    }
+
+    return {
+        start: startDate.toISOString().split('T')[0], // Format: YYYY-MM-DD
+        end: endDate.toISOString().split('T')[0]
+    };
+}
+
+
+function getSelectedDateRange() {
+    const dateRangeSelect = document.getElementById("date-range");
+    return dateRangeSelect.value;
+}
+
+function getActualDateRange() {
+    const selection = getSelectedDateRange();
+    return getDateRangeFromSelection(selection);
+}
+
+function updateData() {
+    const dateRange = getActualDateRange();
+
+    const data = {
+        start_date: dateRange.start,
+        end_date: dateRange.end
+    };
+
+    fetch(dataUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data)
+    })
+    .then(res => {
+        if (!res.ok) throw new Error(`Server error ${res.status}`);
+        return res.json();
+    })
+    .then(data => {
+        console.log("Server response:", data);
+        // do something with response
+    })
+    .catch(err => {
+        console.error("Fetch error:", err);
+    });
 }
