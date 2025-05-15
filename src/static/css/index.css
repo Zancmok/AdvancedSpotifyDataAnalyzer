@@ -23,11 +23,45 @@ body, .container, .section-box, .navbar, .btn, .list-group-item {
 .section-box {
     border: 1px solid #333;
     padding: 1rem;
-    height: 100%;
     text-align: center;
     background-color: #1e1e1e;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    height: 300px; /* Fixed height for section boxes */
+    position: relative;
+    overflow: hidden; /* Prevent section box from scrolling */
+    display: flex;
+    flex-direction: column;
+}
+
+/* Section box heading */
+.section-box p {
+    margin-bottom: 10px;
+    font-weight: bold;
+    flex-shrink: 0; /* Prevent the heading from shrinking */
+}
+
+/* Container for the lists with fixed height */
+.list-container {
+    flex-grow: 1; /* Take up remaining space */
+    overflow-y: auto; /* Only this container scrolls */
+    scrollbar-width: thin;
+    scrollbar-color: #1DB954 #1e1e1e;
+    padding-right: 4px; /* Make room for scrollbar */
+}
+
+/* Custom scrollbar styling */
+.list-container::-webkit-scrollbar {
+    width: 6px;
+}
+
+.list-container::-webkit-scrollbar-track {
+    background: #1e1e1e;
+}
+
+.list-container::-webkit-scrollbar-thumb {
+    background-color: #1DB954;
+    border-radius: 10px;
 }
 
 /* Styling for List Group */
@@ -35,6 +69,11 @@ body, .container, .section-box, .navbar, .btn, .list-group-item {
     background-color: #1e1e1e;
     border: 1px solid #333;
     color: white;
+    transition: background-color 0.3s ease;
+}
+
+.list-group-item:hover {
+    background-color: #2a2a2a;
 }
 
 /* Button Styling */
@@ -49,7 +88,7 @@ body, .container, .section-box, .navbar, .btn, .list-group-item {
 }
 
 /* Date Picker Styling */
-input[type="date"] {
+input[type="date"], select.form-select {
     background-color: #2a2a2a;
     color: white;
     border: 1px solid #444;
@@ -57,7 +96,7 @@ input[type="date"] {
     padding: 8px;
 }
 
-input[type="date"]:focus {
+input[type="date"]:focus, select.form-select:focus {
     background-color: #333;
     box-shadow: 0 0 0 0.2rem rgba(29, 185, 84, 0.25); /* Spotify green glow */
     border-color: #1DB954;
@@ -94,4 +133,46 @@ form .mb-3:nth-child(3) {
 
 form .d-grid {
     animation-delay: 0.4s;
+}
+
+/* Specific animation for newly added items */
+.list-group-item.fade-in {
+    animation: itemFadeIn 0.5s ease forwards;
+}
+
+@keyframes itemFadeIn {
+    from {
+        opacity: 0;
+        background-color: #1DB954;
+        transform: translateX(-5px);
+    }
+    to {
+        opacity: 1;
+        background-color: #1e1e1e;
+        transform: translateX(0);
+    }
+}
+
+/* Additional styles for section boxes with fixed height */
+.section-box {
+	height: 300px;
+	position: relative;
+	overflow: hidden; /* Hide overflow to prevent section box from scrolling */
+	display: flex;
+	flex-direction: column;
+}
+
+/* Style for the list container - only this will scroll */
+.list-container {
+	flex-grow: 1;
+	overflow-y: auto; /* Only the list container will have scrolling */
+	padding-right: 4px; /* Make room for scrollbar */
+}
+
+/* Section box header */
+.section-box p {
+	margin-bottom: 10px;
+	font-weight: bold;
+	position: sticky;
+	top: 0;
 }

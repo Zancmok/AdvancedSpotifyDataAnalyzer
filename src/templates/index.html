@@ -8,38 +8,38 @@
         <meta name="keywords" content="Spotify, data, analysis">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-		<link rel="stylesheet" type="text/css" href="../static/css/index.css">
+        <link rel="stylesheet" type="text/css" href="../static/css/index.css">
     </head>
 
     <body>
         <!-- Header -->
         <header>
             <nav class="navbar navbar-expand-lg bg-light py-0">
-				<div id="skam" class="container-fluid d-flex justify-content-between align-items-center">
-					<h2><a href="/" style="text-decoration:none;color:green">Spotify Analyzer</a></h2>
+                <div id="skam" class="container-fluid d-flex justify-content-between align-items-center">
+                    <h2><a href="/" style="text-decoration:none;color:green">Spotify Analyzer</a></h2>
 
-					<h1 class="mx-auto">Main Page</h1>
+                    <h1 class="mx-auto">Main Page</h1>
 
-					<div class="d-flex align-items-center">
-						<!-- Dropdown Menu -->
-						<div class="dropdown me-2">
-							<button class="btn btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-								Menu
-							</button>
-							<ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
-								<li><a class="dropdown-item" href="Albums">Albums</a></li>
-								<li><a class="dropdown-item" href="Creator">Creator</a></li>
-								<li><a class="dropdown-item" href="Genre">Genre</a></li>
-								<li><a class="dropdown-item" href="Tracks">Tracks</a></li>
-								<li><a class="dropdown-item" href="Users">Users</a></li>
-							</ul>
-						</div>
+                    <div class="d-flex align-items-center">
+                        <!-- Dropdown Menu -->
+                        <div class="dropdown me-2">
+                            <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                Menu
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
+                                <li><a class="dropdown-item" href="Albums">Albums</a></li>
+                                <li><a class="dropdown-item" href="Creator">Creator</a></li>
+                                <li><a class="dropdown-item" href="Genre">Genre</a></li>
+                                <li><a class="dropdown-item" href="Tracks">Tracks</a></li>
+                                <li><a class="dropdown-item" href="Users">Users</a></li>
+                            </ul>
+                        </div>
 
-						<a href="settings" class="btn btn-outline-primary me-2" type="button">Settings</a>
-						<button id="but" class="btn btn-outline-success" type="button">Logout</button>
-					</div>
-				</div>
-			</nav>
+                        <a href="settings" class="btn btn-outline-primary me-2" type="button">Settings</a>
+                        <button id="but" class="btn btn-outline-success" type="button">Logout</button>
+                    </div>
+                </div>
+            </nav>
         </header>
 
         <!-- Dashboard Layout -->
@@ -53,67 +53,86 @@
                     <option value="last-year">Last Year</option>
                     <option value="last-month">Last Month</option>
                 </select>
+                
+                <!-- Add test buttons to demonstrate functionality -->
+                <div class="ms-auto">
+                    <button onclick="addTopUser()" class="btn btn-sm btn-primary me-2">Add User</button>
+                    <button onclick="addTopGenre()" class="btn btn-sm btn-success me-2">Add Genre</button>
+                    <button onclick="addTopCreator()" class="btn btn-sm btn-warning me-2">Add Creator</button>
+                    <button onclick="addTopAlbum()" class="btn btn-sm btn-danger">Add Album</button>
+                </div>
             </div>
 
             <!-- Main Grid -->
             <div class="row mt-4">
                 <!-- Left Column -->
                 <div class="col-md-2 d-flex flex-column gap-3">
-                    <div class="section-box"><p>Top Users</p>
-                        <ul class="list-group fade-in">
-                            <li class="list-group-item">An active item</li>
-                            <li class="list-group-item">A second item</li>
-                            <li class="list-group-item">A third item</li>
-                            <li class="list-group-item">A fourth item</li>
-                            <li class="list-group-item">And a fifth one</li>
-                        </ul>
+                    <div id="topUsers" class="section-box">
+                        <p>Top Users</p>
+                        <div class="list-container">
+                            <ul id="usersList" class="list-group fade-in">
+                                <li class="list-group-item">John Smith</li>
+                                <li class="list-group-item">Sarah Johnson</li>
+                                <li class="list-group-item">Michael Brown</li>
+                            </ul>
+                        </div>
                     </div>
-                    <div class="section-box mt"><p>Top Genre</p>
-                        <ul class="list-group fade-in">
-                            <li class="list-group-item">An active item</li>
-                            <li class="list-group-item">A second item</li>
-                            <li class="list-group-item">A third item</li>
-                            <li class="list-group-item">A fourth item</li>
-                            <li class="list-group-item">And a fifth one</li>
-                        </ul>
+                    <div id="topGenres" class="section-box mt">
+                        <p>Top Genre</p>
+                        <div class="list-container">
+                            <ul id="genresList" class="list-group fade-in">
+                                <li class="list-group-item">Hip Hop</li>
+                                <li class="list-group-item">Rock</li>
+                                <li class="list-group-item">Pop</li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
 
                 <!-- Center Column -->
                 <div class="col-md-8">
-                    <div class="section-box h-100">Main Content Here</div>
+                    <div class="section-box h-100">
+                        <h4>Listening Activity</h4>
+                        <div id="mainContent">
+                            Main dashboard content will go here.
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Right Column -->
                 <div class="col-md-2 d-flex flex-column gap-3">
-                    <div class="section-box">
-                        <ul class="list-group fade-in"><p>Top Creators</p>
-                            <li class="list-group-item">An active item</li>
-                            <li class="list-group-item">A second item</li>
-                            <li class="list-group-item">A third item</li>
-                            <li class="list-group-item">A fourth item</li>
-                            <li class="list-group-item">And a fifth one</li>
-                        </ul>
+                    <div id="topCreators" class="section-box">
+                        <p>Top Creators</p>
+                        <div class="list-container">
+                            <ul id="creatorsList" class="list-group fade-in">
+                                <li class="list-group-item">Drake</li>
+                                <li class="list-group-item">Taylor Swift</li>
+                                <li class="list-group-item">The Weeknd</li>
+                            </ul>
+                        </div>
                     </div>
-                    <div class="section-box">
-                        <ul class="list-group fade-in"><p>Top Albums</p>
-                            <li class="list-group-item">An active item</li>
-                            <li class="list-group-item">A second item</li>
-                            <li class="list-group-item">A third item</li>
-                            <li class="list-group-item">A fourth item</li>
-                            <li class="list-group-item">And a fifth one</li>
-                        </ul>
+                    <div id="topAlbums" class="section-box">
+                        <p>Top Albums</p>
+                        <div class="list-container">
+                            <ul id="albumsList" class="list-group fade-in">
+                                <li class="list-group-item">After Hours</li>
+                                <li class="list-group-item">Folklore</li>
+                                <li class="list-group-item">Certified Lover Boy</li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
         </main>
 
         <script>
+            // URL constants
             const logoutUrl = "{{ url_for('logout') }}";
             const loginUrl = "{{ url_for('login') }}";
         </script>
         <!-- Bootstrap Script -->
         <script src="../static/js/logout.js"></script>
+        <script src="../static/js/main_page.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     </body>
 </html>
