@@ -60,8 +60,6 @@ def _validate_song(json_element: dict[Any, str]) -> None:
 
 
 def _analyze_json(zip_file: ZipFile, file: ZipInfo) -> None:
-    DatabaseManager.run_query("reset_user_data.sql", user_id=session["user"])
-
     contents: Any = json.loads(zip_file.read(file))
 
     if type(contents) is not list:
@@ -102,6 +100,8 @@ def _analyze_json(zip_file: ZipFile, file: ZipInfo) -> None:
 
 
 def process(path: str) -> None:
+    DatabaseManager.run_query("reset_user_data.sql", user_id=session["user"])
+
     with ZipFile(path, 'r') as zip_file:
         for file in zip_file.filelist:
             if not file.filename.endswith('.json'):
@@ -131,6 +131,10 @@ def spotify_api_process() -> None:
                 response: dict[str, Any] = spotify.track(element_uri)
             except Exception as e:
                 print(e, e.args, flush=True)
+
+                if e.args[0] == 404:
+                    DatabaseManager.execute_script("pop_queue.sql")
+
                 sleep(10)
                 continue
 
@@ -151,8 +155,14 @@ def spotify_api_process() -> None:
                 response: dict[str, Any] = spotify.album(element_uri, market='US')
             except Exception as e:
                 print(e, e.args, flush=True)
+
+                if e.args[0] == 404:
+                    DatabaseManager.execute_script("pop_queue.sql")
+
                 sleep(10)
                 continue
+
+
 
             if not DatabaseManager.run_query("exists_album.sql", spotify_uri=element_uri)[0][0]:
                 image: str = ""
@@ -193,6 +203,10 @@ def _do_author_thingy(author_uri: str) -> int:
             break
         except Exception as e:
             print(e, e.args, flush=True)
+
+            if e.args[0] == 404:
+                return -1
+
             sleep(10)
 
     image: str = ""
