@@ -1,16 +1,15 @@
-SELECT 
+SELECT
     u.id AS user_id,
     u.username AS username,
-    u.profile_picture AS profile_picture,
-    SUM(sl.ms_played) AS liten_time
-FROM 
+    SUM(sl.ms_played) AS listen_time
+FROM
     User u
-JOIN 
+JOIN
     SongListen sl ON u.id = sl.user_id
-WHERE 
+WHERE
     sl.timestamp >= :start_date
     AND sl.timestamp < :end_date
-GROUP BY 
+GROUP BY
     u.id
-ORDER BY 
-    liten_time DESC;
+ORDER BY
+    listen_time DESC;
