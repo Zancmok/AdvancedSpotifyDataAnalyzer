@@ -1,2 +1,2 @@
-INSERT INTO SongListen (user_id, song_id, timestamp, conn_country, ip_address, platform, reason_start, reason_end, shuffle, skipped, offline, incognito_mode, offline_timestamp)
-VALUES (:user_id, :song_id, :timestamp, :conn_country, :ip_address, :platform, :reason_start, :reason_end, :shuffle, :skipped, :offline, :incognito_mode, :offline_timestamp);
+INSERT INTO SongListen (user_id, song_id, timestamp, conn_country, ip_address, platform, reason_start, reason_end, shuffle, skipped, offline, incognito_mode, offline_timestamp, ms_played)
+VALUES (:user_id, :song_id, :timestamp, :conn_country, :ip_address, :platform, :reason_start, :reason_end, :shuffle, :skipped, :offline, :incognito_mode, :offline_timestamp, :ms_played);

@@ -10,7 +10,6 @@ from flask import session
 from spotipy import Spotify
 from spotipy.oauth2 import SpotifyClientCredentials
 
-
 celery: Celery = Celery(
     'spotify_analyzer',
     broker=config.CELERY_BROKER_URL,
@@ -61,6 +60,8 @@ def _validate_song(json_element: dict[Any, str]) -> None:
 
 
 def _analyze_json(zip_file: ZipFile, file: ZipInfo) -> None:
+    DatabaseManager.run_query("reset_user_data.sql", user_id=session["user"])
+
     contents: Any = json.loads(zip_file.read(file))
 
     if type(contents) is not list:
@@ -95,7 +96,8 @@ def _analyze_json(zip_file: ZipFile, file: ZipInfo) -> None:
                                   skipped=json_element["skipped"],
                                   offline=json_element["offline"],
                                   incognito_mode=json_element["incognito_mode"],
-                                  offline_timestamp=json_element["offline_timestamp"]
+                                  offline_timestamp=json_element["offline_timestamp"],
+                                  ms_played=json_element["ms_played"]
                                   )
 
 
@@ -128,7 +130,7 @@ def spotify_api_process() -> None:
             try:
                 response: dict[str, Any] = spotify.track(element_uri)
             except Exception as e:
-                print(e, flush=True)
+                print(e, e.args, flush=True)
                 sleep(10)
                 continue
 
@@ -145,21 +147,70 @@ def spotify_api_process() -> None:
             DatabaseManager.execute_script("pop_queue.sql")
 
         elif element["element_type"] == "album":
-            continue
-        
             try:
                 response: dict[str, Any] = spotify.album(element_uri, market='US')
             except Exception as e:
-                print(e, flush=True)
+                print(e, e.args, flush=True)
                 sleep(10)
                 continue
 
-            DatabaseManager.run_query("modify_song_album.sql",
-                                      album_uri=response["uri"])
+            if not DatabaseManager.run_query("exists_album.sql", spotify_uri=element_uri)[0][0]:
+                image: str = ""
 
-            """
-            if DatabaseManager.run_query("exists_author.sql", spotify_uri=element_uri):
-                ...
+                if response["images"]:
+                    image = response["images"][0]["url"]
+
+                DatabaseManager.run_query("add_album.sql",
+                                          author_id=0,
+                                          spotify_uri=element_uri,
+                                          name=response["name"],
+                                          album_type=response["album_type"],
+                                          img_url=image)
+
+            for track in response["tracks"]["items"]:
+                DatabaseManager.run_query("modify_song_album.sql",
+                                          album_uri=response["uri"],
+                                          song_uri=track["uri"])
+
+            if DatabaseManager.run_query("exists_author.sql", spotify_uri=response["artists"][0]["uri"])[0][0]:
+                DatabaseManager.run_query("modify_album_author.sql",
+                                          author_uri=response["artists"][0]["uri"],
+                                          album_uri=element_uri)
             else:
-                ...
-            """
+                author_id: int = _do_author_thingy(response["artists"][0]["uri"])
+
+                DatabaseManager.run_query("modify_album_author.sql",
+                                          author_uri=response["artists"][0]["uri"],
+                                          album_uri=element_uri)
+
+            DatabaseManager.execute_script("pop_queue.sql")
+
+
+def _do_author_thingy(author_uri: str) -> int:
+    while True:
+        try:
+            response: dict[str, Any] = spotify.artist(author_uri)
+            break
+        except Exception as e:
+            print(e, e.args, flush=True)
+            sleep(10)
+
+    image: str = ""
+
+    if response["images"]:
+        image = response["images"][0]["url"]
+
+    DatabaseManager.run_query("add_author.sql",
+                              name=response["name"],
+                              spotify_uri=response["uri"],
+                              img_url=image)
+
+    author_id: int = DatabaseManager.run_query("get_author.sql", spotify_uri=response["uri"])[0][0]
+
+    for genre in response["genres"]:
+        if not DatabaseManager.run_query("exists_genre.sql", name=genre)[0][0]:
+            DatabaseManager.run_query("add_genre.sql", name=genre)
+        DatabaseManager.run_query("add_author_genre.sql", author_id=author_id,
+                                  genre_id=DatabaseManager.run_query("get_genre_id.sql", name=genre)[0][0])
+
+    return author_id

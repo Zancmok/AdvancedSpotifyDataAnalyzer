@@ -3,10 +3,12 @@ from typing import Any
 import SpotifyAnalyzer.config as config
 import sqlite3
 from sqlite3 import Cursor
+from functools import lru_cache
 
 
 class DatabaseManager:
     @staticmethod
+    @lru_cache(maxsize=None)
     def _load_query(script: str) -> str:
         path: str = os.path.join(config.SQL_PATH, script)
 

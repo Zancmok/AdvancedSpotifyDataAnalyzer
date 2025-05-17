@@ -1,9 +1,4 @@
-"""
-# TODO: Write Docstring!
-"""
 import os.path
-from sys import float_info
-
 import bcrypt
 import zipfile
 from flask import Flask, render_template, session, redirect, Response, request
@@ -33,6 +28,8 @@ class SpotifyAnalyzer:
         DatabaseManager.execute_script("create_db.sql")
 
         DatabaseManager.execute_script("create_base_values.sql")
+
+        print(DatabaseManager.run_query("miku_dayo.sql"), flush=True)
 
         celery_tasks.spotify_api_process.delay()
 
