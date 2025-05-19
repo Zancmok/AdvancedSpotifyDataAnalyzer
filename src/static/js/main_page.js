@@ -161,11 +161,11 @@ function refreshContent()
             const avatar = "https://i.pinimg.com/474x/a2/a1/b3/a2a1b30fbfa026c09d088b4f4e83f911.jpg";
             const playtimeHrs = (playtimeMs / 3600000).toFixed(2);
             const row = `
-                <li>
-                    <td><img src="${avatar}" alt="${username}'s Avatar" class="img-thumbnail" style="width: 50px; height: 50px;"></td>
-                    <td>${username}</td>
-                    <td>${playtimeHrs} hrs</td>
-                </li>`;
+            <ul style="list-style-type: none; display: flex; align-items: center; gap: 20px; padding: 0; margin: 0;">
+                <li><img src="${avatar}" alt="${username}'s Avatar" class="img-thumbnail" style="width: 50px; height: 50px;"></li>
+                <li style="width: 100px;">${username}</li>
+                <li style="width: 80px;">${playtimeHrs} hrs</li>
+            </ul>`;
             tableBody.insertAdjacentHTML('afterend', row);
         });
     })
