@@ -223,6 +223,6 @@ class SpotifyAnalyzer:
         return temp_data
 
     @staticmethod
-    @app.route("avatar")
+    @app.route("/avatar/<int:user_id>")
     def avatar() -> str:
         return ""

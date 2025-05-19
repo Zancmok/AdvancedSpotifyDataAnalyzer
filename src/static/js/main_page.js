@@ -145,10 +145,11 @@ function refreshContent() {
     .then(res => res.json())
     .then(data => {
         const tableBody = document.querySelector('#listeningActivityTable tbody');
-        tableBody.innerHTML = '';
-        data.users.forEach(user => {
+        // tableBody.innerHTML = '';
+        data["users"].forEach(user => {
             const [userId, username, playtimeMs] = user;
-            const avatar = `${avatarUrl}/${userId}`;
+            // const avatar = `${avatarUrl}/${userId}`;
+            const avatar = "https://i.pinimg.com/474x/a2/a1/b3/a2a1b30fbfa026c09d088b4f4e83f911.jpg";
             const playtimeHrs = (playtimeMs / 3600000).toFixed(2);
             const row = `
                 <tr>
@@ -163,4 +164,4 @@ function refreshContent() {
 }
 
 
-updateData();
+refreshContent();
