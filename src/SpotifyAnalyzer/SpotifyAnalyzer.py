@@ -218,10 +218,10 @@ class SpotifyAnalyzer:
         }
 
         temp_data = {
-            "users": [[0, "Zancmok", 782913728193712893721], [1, "Rozle", 3782190]]
+            "users": [[1, "Zancmok", 782913728193712893721], [2, "Rozle", 3782190]]
         }
 
-        return temp_data
+        return out_data
 
     @staticmethod
     @app.route("/avatar/<int:user_id>")
