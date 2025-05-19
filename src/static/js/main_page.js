@@ -11,11 +11,6 @@ function addItemToList(listId, itemText) {
     container.scrollTop = container.scrollHeight;
 }
 
-// Sample data for demonstrations
-const users = ["Emily Davis", "Robert Wilson", "Jessica Lee", "David Miller", "Amanda White"];
-const genres = ["Electronic", "R&B", "Jazz", "Country", "Classical"];
-const creators = ["Billie Eilish", "Kendrick Lamar", "Ariana Grande", "Ed Sheeran", "Doja Cat"];
-const albums = ["Planet Her", "DAMN.", "Happier Than Ever", "Divide", "Positions"];
 
 // Counter to track which item to add next
 const counters = {
@@ -129,6 +124,10 @@ function updateData() {
     })
     .then(data => {
         console.log("Server response:", data);
+
+        for (let i = 0; i < data["users"].length; i++) {
+            ;
+        }
         // do something with response
     })
     .catch(err => {
@@ -137,26 +136,31 @@ function updateData() {
 }
 
 function refreshContent() {
-    // Clear all lists
-    document.getElementById("usersList").innerHTML = '';
-    document.getElementById("genresList").innerHTML = '';
-    document.getElementById("creatorsList").innerHTML = '';
-    document.getElementById("albumsList").innerHTML = '';
-
-    // Reset counters
-    counters.users = 0;
-    counters.genres = 0;
-    counters.creators = 0;
-    counters.albums = 0;
-
-    // Optionally, reload default items (you can customize this part as needed)
-    addTopUser();
-    addTopGenre();
-    addTopCreator();
-    addTopAlbum();
-
-    // Reload the data based on the selected date range
-    updateData();
+    const dateRange = getActualDateRange();
+    fetch(dataUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(dateRange)
+    })
+    .then(res => res.json())
+    .then(data => {
+        const tableBody = document.querySelector('#listeningActivityTable tbody');
+        tableBody.innerHTML = '';
+        data.users.forEach(user => {
+            const [userId, username, playtimeMs] = user;
+            const avatar = `${avatarUrl}/${userId}`;
+            const playtimeHrs = (playtimeMs / 3600000).toFixed(2);
+            const row = `
+                <tr>
+                    <td><img src="${avatar}" alt="${username}'s Avatar" class="img-thumbnail" style="width: 50px; height: 50px;"></td>
+                    <td>${username}</td>
+                    <td>${playtimeHrs} hrs</td>
+                </tr>`;
+            tableBody.insertAdjacentHTML('beforeend', row);
+        });
+    })
+    .catch(err => console.error("Fetch error:", err));
 }
+
 
 updateData();
