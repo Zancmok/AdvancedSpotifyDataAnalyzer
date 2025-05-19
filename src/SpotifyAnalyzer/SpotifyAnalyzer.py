@@ -216,4 +216,13 @@ class SpotifyAnalyzer:
             "albums": DatabaseManager.run_query("get_album_listen_times.sql", start_date=in_data["start_date"], end_date=in_data["end_date"])
         }
 
-        return out_data
+        temp_data = {
+            "users": [[0, "Zancmok", 782913728193712893721], [1, "Rozle", 3782190]]
+        }
+
+        return temp_data
+
+    @staticmethod
+    @app.route("avatar")
+    def avatar() -> str:
+        return ""
