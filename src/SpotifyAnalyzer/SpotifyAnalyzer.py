@@ -1,13 +1,14 @@
 import os.path
 import bcrypt
 import zipfile
-from flask import Flask, render_template, session, redirect, Response, request
+from flask import Flask, render_template, session, redirect, Response, request, url_for
 from werkzeug.datastructures.file_storage import FileStorage
 from werkzeug.datastructures import ImmutableDict
-from typing import Any, Callable
+from typing import Any, Callable, Optional
 import SpotifyAnalyzer.config as config
 from SpotifyAnalyzer.DatabaseManager import DatabaseManager
 import SpotifyAnalyzer.celery_tasks as celery_tasks
+import filetype
 
 
 class SpotifyAnalyzer:
@@ -123,17 +124,17 @@ class SpotifyAnalyzer:
             return redirect("/login")
 
         if request.method == "GET":
-            return render_template("settings.html")
+            return render_template("settings.html", picture_path=url_for("avatar", user_id=session["user"]))
 
         files: ImmutableDict = request.files
         data: dict[Any, str] = request.form
 
         old_password: str = data.get("old_password")
         new_username: str = data.get("new_username")
-        username_changed: bool = bool(data.get("username_changed"))
+        username_changed: bool = data.get("username_changed") == "true"
         new_password: str = data.get("new_password")
-        password_changed: bool = bool(data.get("password_changed"))
-        pfp_changed: bool = bool(data.get("pfp_changed"))
+        password_changed: bool = data.get("password_changed") == "true"
+        pfp_changed: bool = data.get("pfp_changed") == "true"
         pfp: FileStorage = files.get("pfp")
  
         database_user: list[tuple[int | str, ...]] = DatabaseManager.run_query("get_user_by_id.sql", id=session.get("user"))
@@ -160,9 +161,9 @@ class SpotifyAnalyzer:
             DatabaseManager.run_query("change_password.sql", password=decoded_hash, id=session.get("user"))
 
         if pfp_changed:
-            DatabaseManager.run_query("change_pfp.sql", profile_picture=pfp)  # DO THIS AT HOUZM
+            DatabaseManager.run_query("change_pfp.sql", profile_picture=pfp.stream.read(), id=session.get("user"))
 
-        return {'success': False, 'reason': "Not implemented yet"}
+        return {'success': True, 'reason': ""}
 
     @staticmethod
     @app.route("/data-upload", methods=["POST"])
@@ -224,5 +225,16 @@ class SpotifyAnalyzer:
 
     @staticmethod
     @app.route("/avatar/<int:user_id>")
-    def avatar() -> str:
-        return ""
+    def avatar(user_id: int) -> str | Response:
+        query_result: list = DatabaseManager.run_query("get_user_pfp.sql", id=user_id)
+
+        if not query_result:
+            return ""
+
+        profile_picture: bytes = query_result[0][0]
+        mime_type: str = filetype.guess(profile_picture).MIME
+
+        if not mime_type:
+            return ""
+
+        return Response(profile_picture, mimetype=mime_type)
