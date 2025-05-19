@@ -135,16 +135,25 @@ function updateData() {
     });
 }
 
-function refreshContent() {
+function refreshContent()
+{
     const dateRange = getActualDateRange();
+
+    const data = {
+        start_date: dateRange.start,
+        end_date: dateRange.end
+    };
+
     fetch(dataUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(dateRange)
+        body: JSON.stringify(data)
     })
     .then(res => res.json())
     .then(data => {
-        const tableBody = document.querySelector('#listeningActivityTable tbody');
+        console.log(data)
+
+        const tableBody = document.querySelector('#usersList');
         // tableBody.innerHTML = '';
         data["users"].forEach(user => {
             const [userId, username, playtimeMs] = user;
@@ -152,12 +161,12 @@ function refreshContent() {
             const avatar = "https://i.pinimg.com/474x/a2/a1/b3/a2a1b30fbfa026c09d088b4f4e83f911.jpg";
             const playtimeHrs = (playtimeMs / 3600000).toFixed(2);
             const row = `
-                <tr>
+                <li>
                     <td><img src="${avatar}" alt="${username}'s Avatar" class="img-thumbnail" style="width: 50px; height: 50px;"></td>
                     <td>${username}</td>
                     <td>${playtimeHrs} hrs</td>
-                </tr>`;
-            tableBody.insertAdjacentHTML('beforeend', row);
+                </li>`;
+            tableBody.insertAdjacentHTML('afterend', row);
         });
     })
     .catch(err => console.error("Fetch error:", err));
