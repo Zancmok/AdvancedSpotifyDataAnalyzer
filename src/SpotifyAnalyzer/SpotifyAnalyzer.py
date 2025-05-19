@@ -203,17 +203,17 @@ class SpotifyAnalyzer:
         if not session.get("user"):
             return redirect("/login")
         
-        data: dict[Any, str] = request.get_json()
+        in_data: dict[Any, str] = request.get_json()
 
-        if "start_date" not in data or "end_date" not in data:
+        if "start_date" not in in_data or "end_date" not in in_data:
             return {}
 
-        data: dict[str, Any] = {
-            "users": DatabaseManager.run_query("get_user_listen_times.sql", start_date=data["start_date"], end_date=data["end_date"]),
-            "genres": DatabaseManager.run_query("get_genre_listen_times.sql", start_date=data["start_date"], end_date=data["end_date"]),
-            "tracks": DatabaseManager.run_query("get_track_listen_times.sql", start_date=data["start_date"], end_date=data["end_date"]),
-            "authors": DatabaseManager.run_query("get_author_listen_times.sql", start_date=data["start_date"], end_date=data["end_date"]),
-            "albums": DatabaseManager.run_query("get_album_listen_times.sql", start_date=data["start_date"], end_date=data["end_date"])
+        out_data: dict[str, Any] = {
+            "users": DatabaseManager.run_query("get_user_listen_times.sql", start_date=in_data["start_date"], end_date=in_data["end_date"]),
+            "genres": DatabaseManager.run_query("get_genre_listen_times.sql", start_date=in_data["start_date"], end_date=in_data["end_date"]),
+            "tracks": DatabaseManager.run_query("get_track_listen_times.sql", start_date=in_data["start_date"], end_date=in_data["end_date"]),
+            "authors": DatabaseManager.run_query("get_author_listen_times.sql", start_date=in_data["start_date"], end_date=in_data["end_date"]),
+            "albums": DatabaseManager.run_query("get_album_listen_times.sql", start_date=in_data["start_date"], end_date=in_data["end_date"])
         }
 
-        return data
+        return out_data
