@@ -20,6 +20,9 @@
 
 					<h1 class="mx-auto">User Page</h1>
 
+                    <ul id="user-data">
+                    </ul>
+
 					<div class="d-flex align-items-center">
 						<!-- Dropdown Menu -->
 						<div class="dropdown me-2">
@@ -56,16 +59,11 @@
 
             <!-- Main Grid -->
             <div class="row">
-                <!-- Left Column - Top Genres -->
+                <!-- Left Column - TopGenres  -->
                 <div class="col-md-3">
                     <div class="section-box h-100 fade-in">
                         <h5 class="mb-4">Top Genres</h5>
-                        <ul class="list-group">
-                            <li class="list-group-item">Pop</li>
-                            <li class="list-group-item">Rock</li>
-                            <li class="list-group-item">Hip Hop</li>
-                            <li class="list-group-item">Electronic</li>
-                            <li class="list-group-item">R&B</li>
+                        <ul id="genresList" class="list-group">
                         </ul>
                     </div>
                 </div>
@@ -74,12 +72,8 @@
                 <div class="col-md-6">
                     <div class="section-box h-100 fade-in">
                         <h5 class="mb-4">Top Tracks</h5>
-                        <ul class="list-group">
-                            <li class="list-group-item">Track 1</li>
-                            <li class="list-group-item">Track 2</li>
-                            <li class="list-group-item">Track 3</li>
-                            <li class="list-group-item">Track 4</li>
-                            <li class="list-group-item">Track 5</li>
+                        <ul id="trackList" class="list-group">
+
                         </ul>
                     </div>
                 </div>
@@ -90,20 +84,14 @@
                         <!-- Creators Section -->
                         <div class="section-box fade-in">
                             <h5 class="mb-3">Creators</h5>
-                            <ul class="list-group">
-                                <li class="list-group-item">Creator 1</li>
-                                <li class="list-group-item">Creator 2</li>
-                                <li class="list-group-item">Creator 3</li>
+                            <ul id="creatorsList" class="list-group">
                             </ul>
                         </div>
                         
                         <!-- Albums Section -->
                         <div class="section-box fade-in">
                             <h5 class="mb-3">Albums</h5>
-                            <ul class="list-group">
-                                <li class="list-group-item">Album 1</li>
-                                <li class="list-group-item">Album 2</li>
-                                <li class="list-group-item">Album 3</li>
+                            <ul id="albumsList" class="list-group">
                             </ul>
                         </div>
                     </div>
@@ -112,12 +100,16 @@
         </main>
 
         <!-- Bootstrap Script -->
-		        <script>
+        <script>
+            const baseUrl = "{{ url_for('index') }}".slice(0, -6)
             const logoutUrl = "{{ url_for('logout') }}";
             const loginUrl = "{{ url_for('login') }}";
+            const dataUrl = "{{ url_for('get_user_data')}}"
+            const userId = "{{ user_id }}";
         </script>
-
+        <script src="../static/js/util.js"></script>
         <script src="../static/js/logout.js"></script>
+        <script src="../static/js/user_page.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     </body>
 </html>

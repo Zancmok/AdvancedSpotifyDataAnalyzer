@@ -34,7 +34,7 @@ function refreshContent() {
     fetch(dataUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ start_date: start, end_date: end })
+        body: JSON.stringify({ start_date: start, end_date: end, user_id: userId })
     })
     .then(res => {
         if (!res.ok) throw new Error(`Server error: ${res.status}`);
@@ -43,22 +43,20 @@ function refreshContent() {
     .then(data => {
         console.log("Updated user data:", data);
 
-        const usersList = document.getElementById("usersList");
+        const userData = document.getElementById("user-data");
+
+        userData.innerHTML = userId
+
         const genresList = document.getElementById("genresList");
         const trackList = document.getElementById("trackList");
         const creatorsList = document.getElementById("creatorsList");
         const albumsList = document.getElementById("albumsList");
 
         // Clear existing content
-        usersList.innerHTML = "";
         genresList.innerHTML = "";
         trackList.innerHTML = "";
         creatorsList.innerHTML = "";
         albumsList.innerHTML = "";
-
-        data.users.forEach(([userId, username, playtimeMs]) => {
-            usersList.appendChild(createUser(userId, username, playtimeMs));
-        });
 
         data.genres.forEach(([genreId, genre, playtimeMs]) => {
             genresList.appendChild(createGenre(genreId, genre, playtimeMs));

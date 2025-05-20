@@ -217,10 +217,6 @@ class SpotifyAnalyzer:
             "albums": DatabaseManager.run_query("get_album_listen_times.sql", start_date=in_data["start_date"], end_date=in_data["end_date"])
         }
 
-        temp_data = {
-            "users": [[1, "Zancmok", 782913728193712893721], [2, "Rozle", 3782190]]
-        }
-
         return out_data
 
     @staticmethod
@@ -238,3 +234,67 @@ class SpotifyAnalyzer:
             return ""
 
         return Response(profile_picture, mimetype=mime_type)
+
+    @staticmethod
+    @app.route("/user/<int:user_id>")
+    def user(user_id: int) -> str | Response:
+        if not session.get("user"):
+            return redirect("/login")
+
+        return render_template("user.html", user_id=user_id)
+
+    @staticmethod
+    @app.route("/song/<int:song_id>")
+    def song(song_id: int) -> str | Response:
+        if not session.get("user"):
+            return redirect("/login")
+
+        return render_template("trackPage.html", song_id=song_id)
+
+    @staticmethod
+    @app.route("/genre/<int:genre_id>")
+    def genre(genre_id: int) -> str | Response:
+        if not session.get("user"):
+            return redirect("/login")
+
+        return render_template("genre.html", genre_id=genre_id)
+
+    @staticmethod
+    @app.route("/author/<int:author_id>")
+    def author(author_id: int) -> str | Response:
+        if not session.get("user"):
+            return redirect("/login")
+
+        return render_template("creator.html", creator_id=author_id)
+
+    @staticmethod
+    @app.route("/album/<int:album_id>")
+    def album(album_id: int) -> str | Response:
+        if not session.get("user"):
+            return redirect("/login")
+
+        return render_template("album.html", album_id=album_id)
+
+    @staticmethod
+    @app.route("/get-user-data", methods=["POST"])
+    def get_user_data() -> Response | dict[str, Any]:
+        if not session.get("user"):
+            return redirect("/login")
+
+        in_data: dict[Any, str] = request.get_json()
+
+        if "start_date" not in in_data or "end_date" not in in_data or "user_id" not in in_data:
+            return {}
+
+        out_data: dict[str, Any] = {
+            "genres": DatabaseManager.run_query("user_page/get_genre_listen_times.sql", start_date=in_data["start_date"],
+                                                end_date=in_data["end_date"], user_id=in_data["user_id"]),
+            "tracks": DatabaseManager.run_query("user_page/get_track_listen_times.sql", start_date=in_data["start_date"],
+                                                end_date=in_data["end_date"], user_id=in_data["user_id"]),
+            "authors": DatabaseManager.run_query("user_page/get_author_listen_times.sql", start_date=in_data["start_date"],
+                                                 end_date=in_data["end_date"], user_id=in_data["user_id"]),
+            "albums": DatabaseManager.run_query("user_page/get_album_listen_times.sql", start_date=in_data["start_date"],
+                                                end_date=in_data["end_date"], user_id=in_data["user_id"])
+        }
+
+        return out_data
