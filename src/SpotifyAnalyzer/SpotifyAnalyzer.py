@@ -136,8 +136,9 @@ class SpotifyAnalyzer:
         password_changed: bool = data.get("password_changed") == "true"
         pfp_changed: bool = data.get("pfp_changed") == "true"
         pfp: FileStorage = files.get("pfp")
- 
-        database_user: list[tuple[int | str, ...]] = DatabaseManager.run_query("get_user_by_id.sql", id=session.get("user"))
+
+        database_user: list[tuple[int | str, ...]] = DatabaseManager.run_query("get_user_by_id.sql",
+                                                                               id=session.get("user"))
 
         encoded_user_hash: bytes = database_user[0][2].encode('utf-8')
 
@@ -203,18 +204,23 @@ class SpotifyAnalyzer:
     def get_main_page_data() -> Response | dict[str, Any]:
         if not session.get("user"):
             return redirect("/login")
-        
+
         in_data: dict[Any, str] = request.get_json()
 
         if "start_date" not in in_data or "end_date" not in in_data:
             return {}
 
         out_data: dict[str, Any] = {
-            "users": DatabaseManager.run_query("get_user_listen_times.sql", start_date=in_data["start_date"], end_date=in_data["end_date"]),
-            "genres": DatabaseManager.run_query("get_genre_listen_times.sql", start_date=in_data["start_date"], end_date=in_data["end_date"]),
-            "tracks": DatabaseManager.run_query("get_track_listen_times.sql", start_date=in_data["start_date"], end_date=in_data["end_date"]),
-            "authors": DatabaseManager.run_query("get_author_listen_times.sql", start_date=in_data["start_date"], end_date=in_data["end_date"]),
-            "albums": DatabaseManager.run_query("get_album_listen_times.sql", start_date=in_data["start_date"], end_date=in_data["end_date"])
+            "users": DatabaseManager.run_query("get_user_listen_times.sql", start_date=in_data["start_date"],
+                                               end_date=in_data["end_date"]),
+            "genres": DatabaseManager.run_query("get_genre_listen_times.sql", start_date=in_data["start_date"],
+                                                end_date=in_data["end_date"]),
+            "tracks": DatabaseManager.run_query("get_track_listen_times.sql", start_date=in_data["start_date"],
+                                                end_date=in_data["end_date"]),
+            "authors": DatabaseManager.run_query("get_author_listen_times.sql", start_date=in_data["start_date"],
+                                                 end_date=in_data["end_date"]),
+            "albums": DatabaseManager.run_query("get_album_listen_times.sql", start_date=in_data["start_date"],
+                                                end_date=in_data["end_date"])
         }
 
         return out_data
@@ -288,14 +294,46 @@ class SpotifyAnalyzer:
 
         out_data: dict[str, Any] = {
             "main": DatabaseManager.run_query("user_page/main.sql", user_id=in_data["user_id"]),
-            "genres": DatabaseManager.run_query("user_page/get_genre_listen_times.sql", start_date=in_data["start_date"],
+            "genres": DatabaseManager.run_query("user_page/get_genre_listen_times.sql",
+                                                start_date=in_data["start_date"],
                                                 end_date=in_data["end_date"], user_id=in_data["user_id"]),
-            "tracks": DatabaseManager.run_query("user_page/get_track_listen_times.sql", start_date=in_data["start_date"],
+            "tracks": DatabaseManager.run_query("user_page/get_track_listen_times.sql",
+                                                start_date=in_data["start_date"],
                                                 end_date=in_data["end_date"], user_id=in_data["user_id"]),
-            "authors": DatabaseManager.run_query("user_page/get_author_listen_times.sql", start_date=in_data["start_date"],
+            "authors": DatabaseManager.run_query("user_page/get_author_listen_times.sql",
+                                                 start_date=in_data["start_date"],
                                                  end_date=in_data["end_date"], user_id=in_data["user_id"]),
-            "albums": DatabaseManager.run_query("user_page/get_album_listen_times.sql", start_date=in_data["start_date"],
+            "albums": DatabaseManager.run_query("user_page/get_album_listen_times.sql",
+                                                start_date=in_data["start_date"],
                                                 end_date=in_data["end_date"], user_id=in_data["user_id"])
+        }
+
+        return out_data
+
+    @staticmethod
+    @app.route("/get-genre-data", methods=["POST"])
+    def get_genre_data() -> Response | dict[str, Any]:
+        if not session.get("user"):
+            return redirect("/login")
+
+        in_data: dict[Any, str] = request.get_json()
+
+        if "start_date" not in in_data or "end_date" not in in_data or "genre_id" not in in_data:
+            return {}
+
+        out_data: dict[str, Any] = {
+            "main": DatabaseManager.run_query("genre_page/main.sql", genre_id=in_data["genre_id"]),
+            "users": DatabaseManager.run_query("genre_page/get_user_listen_times.sql", start_date=in_data["start_date"],
+                                               end_date=in_data["end_date"], genre_id=in_data["genre_id"]),
+            "tracks": DatabaseManager.run_query("genre_page/get_track_listen_times.sql",
+                                                start_date=in_data["start_date"],
+                                                end_date=in_data["end_date"], genre_id=in_data["genre_id"]),
+            "authors": DatabaseManager.run_query("genre_page/get_author_listen_times.sql",
+                                                 start_date=in_data["start_date"],
+                                                 end_date=in_data["end_date"], genre_id=in_data["genre_id"]),
+            "albums": DatabaseManager.run_query("genre_page/get_album_listen_times.sql",
+                                                start_date=in_data["start_date"],
+                                                end_date=in_data["end_date"], genre_id=in_data["genre_id"])
         }
 
         return out_data
