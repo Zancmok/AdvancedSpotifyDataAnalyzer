@@ -1,0 +1,3 @@
+DELETE FROM SongListen;
+
+DELETE FROM User;
