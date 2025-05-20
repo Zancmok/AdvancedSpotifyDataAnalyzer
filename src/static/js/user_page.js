@@ -44,8 +44,10 @@ function refreshContent() {
         console.log("Updated user data:", data);
 
         const userData = document.getElementById("user-data");
+        const userDataPFP = document.getElementById("user-data-pfp");
 
-        userData.innerHTML = userId
+        userData.innerHTML = data["main"][0][0]
+        userDataPFP.src = `${baseUrl}/avatar/${userId}`
 
         const genresList = document.getElementById("genresList");
         const trackList = document.getElementById("trackList");

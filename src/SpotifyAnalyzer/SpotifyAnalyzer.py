@@ -287,6 +287,7 @@ class SpotifyAnalyzer:
             return {}
 
         out_data: dict[str, Any] = {
+            "main": DatabaseManager.run_query("user_page/main.sql", user_id=in_data["user_id"]),
             "genres": DatabaseManager.run_query("user_page/get_genre_listen_times.sql", start_date=in_data["start_date"],
                                                 end_date=in_data["end_date"], user_id=in_data["user_id"]),
             "tracks": DatabaseManager.run_query("user_page/get_track_listen_times.sql", start_date=in_data["start_date"],
