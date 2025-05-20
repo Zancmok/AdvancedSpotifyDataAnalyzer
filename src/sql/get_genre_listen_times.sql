@@ -23,4 +23,3 @@ GROUP BY
     g.id, g.name
 ORDER BY
     total_listen_time DESC
-LIMIT 100;

@@ -44,15 +44,21 @@ function refreshContent() {
         console.log("Updated user data:", data);
 
         const usersList = document.getElementById("usersList");
-        if (!usersList) return;
+        const genresList = document.getElementById("genresList");
+        const trackList = document.getElementById("trackList");
+        const creatorsList = document.getElementById("creatorsList");
+        const albumsList = document.getElementById("albumsList");
 
         // Clear existing content
         usersList.innerHTML = "";
+        genresList.innerHTML = "";
+        trackList.innerHTML = "";
+        creatorsList.innerHTML = "";
+        albumsList.innerHTML = "";
 
-        // Rebuild list with new data
         data.users.forEach(([userId, username, playtimeMs]) => {
             const avatarUrl = `avatar/${userId}`
-            const playtimeHrs = (playtimeMs / 3600000).toFixed(2);
+            const playtimeHrs = (playtimeMs / 3600000).toFixed(0);
 
             const listItem = document.createElement("li");
             listItem.className = "list-group-item fade-in";
@@ -65,6 +71,65 @@ function refreshContent() {
             `;
             usersList.appendChild(listItem);
         });
+
+        data.genres.forEach(([genreId, genre, playtimeMs]) => {
+            const playtimeHrs = (playtimeMs / 3600000).toFixed(0);
+
+            const listItem = document.createElement("li");
+            listItem.className = "list-group-item fade-in";
+            listItem.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 20px;">
+                    <span style="width: 100px;">${genre}</span>
+                    <span style="width: 80px;">${playtimeHrs} hrs</span>
+                </div>
+            `;
+            genresList.appendChild(listItem);
+        })
+
+        data.tracks.forEach(([trackId, track, trackUri, trackPFP, playtimeMs]) => {
+            const playtimeHrs = `${(playtimeMs / 3600000).toFixed(0)}hrs ${((playtimeMs % 3600000) / 60000).toFixed(0)}min`;
+
+            const listItem = document.createElement("li");
+            listItem.className = "list-group-item fade-in";
+            listItem.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 20px;">
+                    <img src="${trackPFP}" alt="${track}'s Avatar" style="width: 50px; height: 50px;">
+                    <span style="width: 100px;">${track}</span>
+                    <span style="width: 80px;">${playtimeHrs}</span>
+                </div>
+            `;
+            trackList.appendChild(listItem);
+        })
+
+        data.authors.forEach(([authorId, author, authorUri, authorPFP, playtimeMs]) => {
+            const playtimeHrs = (playtimeMs / 3600000).toFixed(0);
+
+            const listItem = document.createElement("li");
+            listItem.className = "list-group-item fade-in";
+            listItem.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 20px;">
+                    <img src="${authorPFP}" alt="${author}'s Avatar" style="width: 50px; height: 50px;">
+                    <span style="width: 100px;">${author}</span>
+                    <span style="width: 80px;">${playtimeHrs} hrs</span>
+                </div>
+            `;
+            creatorsList.appendChild(listItem);
+        })
+
+        data.albums.forEach(([albumId, album, albumUri, albumPFP, author, playtimeMs]) => {
+            const playtimeHrs = (playtimeMs / 3600000).toFixed(0);
+
+            const listItem = document.createElement("li");
+            listItem.className = "list-group-item fade-in";
+            listItem.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 20px;">
+                    <img src="${albumPFP}" alt="${album}'s Avatar" style="width: 50px; height: 50px;">
+                    <span style="width: 100px;">${album}</span>
+                    <span style="width: 80px;">${playtimeHrs} hrs</span>
+                </div>
+            `;
+            albumsList.appendChild(listItem);
+        })
     })
     .catch(err => console.error("Fetch error:", err));
 }
