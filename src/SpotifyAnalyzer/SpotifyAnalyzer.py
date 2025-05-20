@@ -271,7 +271,7 @@ class SpotifyAnalyzer:
         if not session.get("user"):
             return redirect("/login")
 
-        return render_template("creator.html", creator_id=author_id)
+        return render_template("creator.html", author_id=author_id)
 
     @staticmethod
     @app.route("/album/<int:album_id>")
@@ -353,6 +353,32 @@ class SpotifyAnalyzer:
             "main": DatabaseManager.run_query("song_page/main.sql", song_id=in_data["song_id"]),
             "users": DatabaseManager.run_query("song_page/get_user_listen_times.sql", start_date=in_data["start_date"],
                                                end_date=in_data["end_date"], song_id=in_data["song_id"])
+        }
+
+        return out_data
+
+
+    @staticmethod
+    @app.route("/get-author-data", methods=["POST"])
+    def get_author_data() -> Response | dict[str, Any]:
+        if not session.get("user"):
+            return redirect("/login")
+
+        in_data: dict[Any, str] = request.get_json()
+
+        if "start_date" not in in_data or "end_date" not in in_data or "author_id" not in in_data:
+            return {}
+
+        out_data: dict[str, Any] = {
+            "main": DatabaseManager.run_query("author_page/main.sql", author_id=in_data["author_id"]),
+            "users": DatabaseManager.run_query("author_page/get_user_listen_times.sql", start_date=in_data["start_date"],
+                                               end_date=in_data["end_date"], author_id=in_data["author_id"]),
+            "tracks": DatabaseManager.run_query("author_page/get_track_listen_times.sql",
+                                                start_date=in_data["start_date"],
+                                                end_date=in_data["end_date"], author_id=in_data["author_id"]),
+            "albums": DatabaseManager.run_query("author_page/get_album_listen_times.sql",
+                                                start_date=in_data["start_date"],
+                                                end_date=in_data["end_date"], author_id=in_data["author_id"])
         }
 
         return out_data
