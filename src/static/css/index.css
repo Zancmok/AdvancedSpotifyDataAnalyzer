@@ -63,13 +63,6 @@ body, .container, .section-box, .navbar, .btn, .list-group-item {
     border-radius: 10px;
 }
 
-.col-md-8 {
-    display: flex;
-    flex-direction: column;
-    justify-content: center; /* Center content vertically */
-    height: 100%; /* Make sure it takes full height */
-}
-
 /* Styling for List Group */
 .list-group-item {
     background-color: #1e1e1e;
