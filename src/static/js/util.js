@@ -59,7 +59,7 @@ function createAuthor(authorId, author, authorUri, authorPFP, playtimeMs)
         <div style="display: flex; align-items: center; gap: 20px;">
             <img src="${authorPFP}" alt="${author}'s Avatar" style="width: 50px; height: 50px;">
             <span style="width: 100px;"><a href="${baseUrl}/author/${authorId}">${author}</a></span>
-            <span style="width: 80px;">${playtimeHrs} hrs</span>
+            <span style="width: 80px;">${playtimeHrs}</span>
         </div>
     `;
 
@@ -76,7 +76,7 @@ function createAlbum(albumId, album, albumUri, albumPFP, author, playtimeMs)
         <div style="display: flex; align-items: center; gap: 20px;">
             <img src="${albumPFP}" alt="${album}'s Avatar" style="width: 50px; height: 50px;">
             <span style="width: 100px;"><a href="${baseUrl}/album/${albumId}">${album}</a></span>
-            <span style="width: 80px;">${playtimeHrs} hrs</span>
+            <span style="width: 80px;">${playtimeHrs}</span>
         </div>
     `;
 
