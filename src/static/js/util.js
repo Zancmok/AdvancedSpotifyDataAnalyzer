@@ -1,7 +1,7 @@
 function createUser(userId, username, playtimeMs)
 {
     const avatarUrl = `${baseUrl}/avatar/${userId}`
-    const playtimeHrs = (playtimeMs / 3600000).toFixed(0);
+    const playtimeHrs = `${(playtimeMs / 3600000).toFixed(0)}hrs ${((playtimeMs % 3600000) / 60000).toFixed(0)}min`;
 
     const listItem = document.createElement("li");
     listItem.className = "list-group-item fade-in";
@@ -35,7 +35,7 @@ function createTrack(trackId, track, trackUri, trackPFP, playtimeMs)
 
 function createGenre(genreId, genre, playtimeMs)
 {
-    const playtimeHrs = (playtimeMs / 3600000).toFixed(0);
+    const playtimeHrs = `${(playtimeMs / 3600000).toFixed(0)}hrs ${((playtimeMs % 3600000) / 60000).toFixed(0)}min`;
 
     const listItem = document.createElement("li");
     listItem.className = "list-group-item fade-in";
@@ -51,7 +51,7 @@ function createGenre(genreId, genre, playtimeMs)
 
 function createAuthor(authorId, author, authorUri, authorPFP, playtimeMs)
 {
-    const playtimeHrs = (playtimeMs / 3600000).toFixed(0);
+    const playtimeHrs = `${(playtimeMs / 3600000).toFixed(0)}hrs ${((playtimeMs % 3600000) / 60000).toFixed(0)}min`;
 
     const listItem = document.createElement("li");
     listItem.className = "list-group-item fade-in";
@@ -68,7 +68,7 @@ function createAuthor(authorId, author, authorUri, authorPFP, playtimeMs)
 
 function createAlbum(albumId, album, albumUri, albumPFP, author, playtimeMs)
 {
-    const playtimeHrs = (playtimeMs / 3600000).toFixed(0);
+    const playtimeHrs = `${(playtimeMs / 3600000).toFixed(0)}hrs ${((playtimeMs % 3600000) / 60000).toFixed(0)}min`;
 
     const listItem = document.createElement("li");
     listItem.className = "list-group-item fade-in";
