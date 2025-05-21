@@ -43,11 +43,10 @@ body, .container, .section-box, .navbar, .btn, .list-group-item {
 
 /* Container for the lists with fixed height */
 .list-container {
-    flex-grow: 1; /* Take up remaining space */
-    overflow-y: auto; /* Only this container scrolls */
-    scrollbar-width: thin;
-    scrollbar-color: #1DB954 #1e1e1e;
-    padding-right: 4px; /* Make room for scrollbar */
+    flex-grow: 1;
+    overflow-y: auto;  /* Only this container should scroll vertically */
+    overflow-x: hidden; /* Disable horizontal scrolling */
+    padding-right: 4px; /* Make room for the scrollbar */
 }
 
 /* Custom scrollbar styling */
@@ -62,6 +61,13 @@ body, .container, .section-box, .navbar, .btn, .list-group-item {
 .list-container::-webkit-scrollbar-thumb {
     background-color: #1DB954;
     border-radius: 10px;
+}
+
+.col-md-8 {
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Center content vertically */
+    height: 100%; /* Make sure it takes full height */
 }
 
 /* Styling for List Group */
