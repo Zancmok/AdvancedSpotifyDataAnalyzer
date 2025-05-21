@@ -1,6 +1,6 @@
 import os
 from typing import Any
-import SpotifyAnalyzer.config as config
+from SpotifyAnalyzer import SpotifyAnalyzer as config
 import sqlite3
 from sqlite3 import Cursor
 from functools import lru_cache

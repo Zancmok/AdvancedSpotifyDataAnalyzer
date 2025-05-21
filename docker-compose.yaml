@@ -1,43 +1,58 @@
-version: "3.8"
-
 services:
-  app:
+  mysql:
+    image: mysql:8
+    container_name: mysql-db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: spotifydb
+      MYSQL_USER: spotify
+      MYSQL_PASSWORD: spotifypass
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  spotify_analyzer:
     build:
       context: .
-      dockerfile: Dockerfile
-    container_name: spotify-analyzer-app
+      dockerfile: src/SpotifyAnalyzer/Dockerfile
+    container_name: spotify-analyzer
     image: spotify-analyzer:latest
     ports:
       - "5000:5000"
     volumes:
-      - ./random/database.db:/app/database/database.db
       - uploads:/app/uploads
+    environment:
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_USER: spotify
+      DB_PASSWORD: spotifypass
+      DB_NAME: spotifydb
     working_dir: /app
     depends_on:
-      - redis
+      - mysql
+    restart: unless-stopped
 
-  celery:
+  spotify_interface:
     build:
       context: .
-      dockerfile: Dockerfile
-    container_name: spotify-analyzer-celery
-    image: spotify-analyzer:latest
+      dockerfile: src/SpotifyInterface/Dockerfile
+    container_name: spotify-interface
+    image: spotify-interface:latest
     volumes:
-      - ./random/database.db:/app/database/database.db
       - uploads:/app/uploads
-    working_dir: /app
-    command: celery -A SpotifyAnalyzer.celery_tasks.celery worker --concurrency=2 --pool=solo --loglevel=info
     environment:
-      - PYTHONPATH=/app/src
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_USER: spotify
+      DB_PASSWORD: spotifypass
+      DB_NAME: spotifydb
+    working_dir: /app
     depends_on:
-      - redis
-
-  redis:
-    image: redis:7
-    container_name: spotify-analyzer-redis
-    ports:
-      - "6379:6379"
+      - mysql
+    restart: unless-stopped
 
 volumes:
-  sqlite_data:
+  mysql_data:
   uploads:

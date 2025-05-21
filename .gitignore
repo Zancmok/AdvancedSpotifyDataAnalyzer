@@ -2,5 +2,5 @@
 .venv
 .idea
 src/__pycache__
-src/SpotifyAnalyzer/__pycache__
+src/SpotifyAnalyzer/SpotifyAnalyzer/__pycache__
 database.db

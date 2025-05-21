@@ -4,10 +4,10 @@ import zipfile
 from flask import Flask, render_template, session, redirect, Response, request, url_for
 from werkzeug.datastructures.file_storage import FileStorage
 from werkzeug.datastructures import ImmutableDict
-from typing import Any, Callable, Optional
-import SpotifyAnalyzer.config as config
-from SpotifyAnalyzer.DatabaseManager import DatabaseManager
-import SpotifyAnalyzer.celery_tasks as celery_tasks
+from typing import Any
+from SpotifyAnalyzer import SpotifyAnalyzer as config
+from SpotifyAnalyzer.SpotifyAnalyzer.DatabaseManager import DatabaseManager
+import SpotifyAnalyzer.SpotifyAnalyzer.celery_tasks as celery_tasks
 import filetype
 
 
@@ -47,7 +47,7 @@ class SpotifyAnalyzer:
         if not session.get("user"):
             return redirect("/login")
 
-        return render_template("index.html")
+        return render_template("../templates/index.html")
 
     @staticmethod
     @app.route("/login", methods=["GET", "POST"])
@@ -56,7 +56,7 @@ class SpotifyAnalyzer:
             return redirect("/")
 
         if request.method == "GET":
-            return render_template("loginAndSignup.html")
+            return render_template("../templates/loginAndSignup.html")
 
         data: dict[str, Any] = request.get_json()
 
@@ -124,7 +124,7 @@ class SpotifyAnalyzer:
             return redirect("/login")
 
         if request.method == "GET":
-            return render_template("settings.html", picture_path=url_for("avatar", user_id=session["user"]))
+            return render_template("../templates/settings.html", picture_path=url_for("avatar", user_id=session["user"]))
 
         files: ImmutableDict = request.files
         data: dict[Any, str] = request.form
@@ -247,7 +247,7 @@ class SpotifyAnalyzer:
         if not session.get("user"):
             return redirect("/login")
 
-        return render_template("user.html", user_id=user_id)
+        return render_template("../templates/user.html", user_id=user_id)
 
     @staticmethod
     @app.route("/song/<int:song_id>")
@@ -255,7 +255,7 @@ class SpotifyAnalyzer:
         if not session.get("user"):
             return redirect("/login")
 
-        return render_template("trackPage.html", song_id=song_id)
+        return render_template("../templates/trackPage.html", song_id=song_id)
 
     @staticmethod
     @app.route("/genre/<int:genre_id>")
@@ -263,7 +263,7 @@ class SpotifyAnalyzer:
         if not session.get("user"):
             return redirect("/login")
 
-        return render_template("genre.html", genre_id=genre_id)
+        return render_template("../templates/genre.html", genre_id=genre_id)
 
     @staticmethod
     @app.route("/author/<int:author_id>")
@@ -271,7 +271,7 @@ class SpotifyAnalyzer:
         if not session.get("user"):
             return redirect("/login")
 
-        return render_template("creator.html", author_id=author_id)
+        return render_template("../templates/creator.html", author_id=author_id)
 
     @staticmethod
     @app.route("/album/<int:album_id>")
@@ -279,7 +279,7 @@ class SpotifyAnalyzer:
         if not session.get("user"):
             return redirect("/login")
 
-        return render_template("album.html", album_id=album_id)
+        return render_template("../templates/album.html", album_id=album_id)
 
     @staticmethod
     @app.route("/get-user-data", methods=["POST"])
