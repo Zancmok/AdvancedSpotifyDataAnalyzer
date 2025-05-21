@@ -175,3 +175,7 @@ form .d-grid {
 	position: sticky;
 	top: 0;
 }
+
+col-md-8{
+    height: calc(100hv-250px);
+}
