@@ -155,7 +155,6 @@ form .d-grid {
 
 /* Center column specific styles */
 .col-md-8 .section-box {
-    height: calc(100vh - 250px); /* Adjust height for better center column view */
     max-height: 600px; /* Fallback max height */
 }
 
