@@ -35,7 +35,7 @@ body, .container, .section-box, .navbar, .btn, .list-group-item {
 }
 
 /* Section box heading */
-.section-box p {
+.section-box p, .section-box h4 {
     margin-bottom: 10px;
     font-weight: bold;
     flex-shrink: 0; /* Prevent the heading from shrinking */
@@ -152,30 +152,28 @@ form .d-grid {
     }
 }
 
-/* Additional styles for section boxes with fixed height */
-.section-box {
-	height: 300px;
-	position: relative;
-	overflow: hidden; /* Hide overflow to prevent section box from scrolling */
-	display: flex;
-	flex-direction: column;
+/* Center column specific styles */
+.col-md-8 .section-box {
+    height: calc(100vh - 250px); /* Adjust height for better center column view */
 }
 
-/* Style for the list container - only this will scroll */
-.list-container {
-	flex-grow: 1;
-	overflow-y: auto; /* Only the list container will have scrolling */
-	padding-right: 4px; /* Make room for scrollbar */
+/* Make sure center column has the same scrolling behavior */
+.col-md-8 .list-container {
+    flex-grow: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-right: 4px;
 }
 
-/* Section box header */
-.section-box p {
-	margin-bottom: 10px;
-	font-weight: bold;
-	position: sticky;
-	top: 0;
+.col-md-8 .list-container::-webkit-scrollbar {
+    width: 6px;
 }
 
-col-md-8{
-    height: calc(100hv-250px);
+.col-md-8 .list-container::-webkit-scrollbar-track {
+    background: #1e1e1e;
+}
+
+.col-md-8 .list-container::-webkit-scrollbar-thumb {
+    background-color: #1DB954;
+    border-radius: 10px;
 }
