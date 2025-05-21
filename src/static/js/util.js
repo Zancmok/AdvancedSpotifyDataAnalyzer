@@ -42,7 +42,7 @@ function createGenre(genreId, genre, playtimeMs)
     listItem.innerHTML = `
         <div style="display: flex; align-items: center; gap: 20px;">
             <span style="width: 100px;"><a href="${baseUrl}/genre/${genreId}">${genre}</a></span>
-            <span style="width: 80px;">${playtimeHrs} hrs</span>
+            <span style="width: 80px;">${playtimeHrs}</span>
         </div>
     `;
 
