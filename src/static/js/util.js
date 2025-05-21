@@ -9,7 +9,7 @@ function createUser(userId, username, playtimeMs)
         <div style="display: flex; align-items: center; gap: 20px;">
             <img src="${avatarUrl}" alt="${username}'s Avatar" style="width: 50px; height: 50px;">
             <span style="width: 100px;"><a href="${baseUrl}/user/${userId}">${username}</a></span>
-            <span style="width: 80px;">${playtimeHrs} hrs</span>
+            <span style="width: 80px;">${playtimeHrs}</span>
         </div>
     `;
 
