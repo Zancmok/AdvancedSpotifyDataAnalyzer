@@ -44,9 +44,10 @@ body, .container, .section-box, .navbar, .btn, .list-group-item {
 /* Container for the lists with fixed height */
 .list-container {
     flex-grow: 1;
-    overflow-y: auto;  /* Only this container should scroll vertically */
+    overflow-y: auto !important;  /* Force container to scroll vertically */
     overflow-x: hidden; /* Disable horizontal scrolling */
     padding-right: 4px; /* Make room for the scrollbar */
+    min-height: 100px; /* Ensure some minimum height */
 }
 
 /* Custom scrollbar styling */
@@ -155,16 +156,19 @@ form .d-grid {
 /* Center column specific styles */
 .col-md-8 .section-box {
     height: calc(100vh - 250px); /* Adjust height for better center column view */
+    max-height: 600px; /* Fallback max height */
 }
 
 /* Make sure center column has the same scrolling behavior */
 .col-md-8 .list-container {
     flex-grow: 1;
-    overflow-y: auto;
+    overflow-y: auto !important; /* Force scrolling behavior */
     overflow-x: hidden;
     padding-right: 4px;
+    min-height: 100px; /* Ensure minimum height for content */
 }
 
+/* Style the scrollbar for all browsers */
 .col-md-8 .list-container::-webkit-scrollbar {
     width: 6px;
 }
@@ -176,4 +180,17 @@ form .d-grid {
 .col-md-8 .list-container::-webkit-scrollbar-thumb {
     background-color: #1DB954;
     border-radius: 10px;
+}
+
+/* Firefox scrollbar */
+.col-md-8 .list-container {
+    scrollbar-width: thin;
+    scrollbar-color: #1DB954 #1e1e1e;
+}
+
+/* Ensure the list items are styled correctly */
+.col-md-8 .list-group-item {
+    display: block;
+    width: 100%;
+    margin-bottom: 4px;
 }
