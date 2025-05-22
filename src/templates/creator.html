@@ -15,20 +15,21 @@
         <!-- Header -->
         <header>
             <nav class="navbar navbar-expand-lg bg-light py-0">
-				<div id="skam" class="container-fluid d-flex justify-content-between align-items-center">
-					<h2><a href="/" style="text-decoration:none;color:green">Spotify Analyzer</a></h2>
+                <div id="skam" class="container-fluid d-flex justify-content-between align-items-center">
+                    <h2><a href="/" style="text-decoration:none;color:green">Spotify Analyzer</a></h2>
 
-                    <img id="author-data-pfp" height="100" width="100" class="mx-auto" src="" alt="PFP">
+                    <!-- Wrapper for Image and h1 -->
+                    <div class="d-flex align-items-center mx-auto">
+                        <img id="author-data-pfp" height="100" width="100" class="mx-2" src="" alt="PFP">
+                        <h1 id="author-data" class="mx-2">Creator Page</h1>
+                    </div>
 
-					<h1 id="author-data" class="mx-auto">Creator Page</h1>
-
-					<div class="d-flex align-items-center">
-
-						<a href="settings" class="btn btn-outline-primary me-2" type="button">Settings</a>
-						<button id="but" class="btn btn-outline-success" type="button">Logout</button>
-					</div>
-				</div>
-			</nav>
+                    <div class="d-flex align-items-center">
+                        <a href="settings" class="btn btn-outline-primary me-2" type="button">Settings</a>
+                        <button id="but" class="btn btn-outline-success" type="button">Logout</button>
+                    </div>
+                </div>
+            </nav>
         </header>
 
         <!-- Dashboard Layout -->
@@ -47,7 +48,7 @@
             <div class="row">
                 <!-- Left Column - Top Albums -->
                 <div class="col-md-4">
-                    <div class="section-box h-100 fade-in">
+                    <div class="section-box">
                         <h5 class="mb-4">Top Albums</h5>
                         <ul id="albumsList" class="list-group">
                         </ul>
@@ -56,7 +57,7 @@
 
                 <!-- Center Column - Top Tracks -->
                 <div class="col-md-4">
-                    <div class="section-box h-100 fade-in">
+                    <div class="section-box">
                         <h5 class="mb-4">Top Tracks</h5>
                         <ul id="trackList" class="list-group">
                         </ul>
@@ -65,7 +66,7 @@
 
                 <!-- Right Column - Top Users/Listeners -->
                 <div class="col-md-4">
-                    <div class="section-box h-100 fade-in">
+                    <div class="section-box">
                         <h5 class="mb-4">Top Users/Listeners</h5>
                         <ul id="usersList" class="list-group">
                         </ul>

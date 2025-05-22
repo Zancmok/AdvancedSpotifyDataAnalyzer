@@ -7,7 +7,14 @@ body, .container, .section-box, .navbar, .btn, .list-group-item {
 /* Header Style */
 #skam {
     background-color: #1e1e1e;
-    padding: 20px 0;
+    padding: 0;
+    height:10vh;
+}
+
+#skibidi {
+    background-color: #1e1e1e;
+    padding: 0;
+    height:5vh;
 }
 
 #but {
@@ -27,7 +34,7 @@ body, .container, .section-box, .navbar, .btn, .list-group-item {
     background-color: #1e1e1e;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    height: 300px; /* Fixed height for section boxes */
+    height: 38.5vh; /* Fixed height for section boxes */
     position: relative;
     overflow: hidden; /* Prevent section box from scrolling */
     display: flex;
@@ -155,7 +162,7 @@ form .d-grid {
 
 /* Center column specific styles */
 .col-md-8 .section-box {
-    max-height: 80vh;
+    max-height: 79vh;
 }
 
 /* Make sure center column has the same scrolling behavior */

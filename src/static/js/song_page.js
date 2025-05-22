@@ -61,5 +61,7 @@ function refreshContent() {
     .catch(err => console.error("Fetch error:", err));
 }
 
+document.getElementById("date-range").addEventListener("change", refreshContent)
+
 // Initial load
 refreshContent();
