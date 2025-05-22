@@ -3,7 +3,7 @@ import dotenv
 
 dotenv.load_dotenv()
 
-DEBUG: bool = True
+DEBUG: bool = False
 PORT: int = 5000
 HOST: str = "0.0.0.0"
 STATIC_PATH: str = "/app/src/static"

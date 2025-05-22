@@ -1,17 +1,8 @@
-"""
-# TODO: Write Docstring!
-"""
-
+from flask import Flask
 from SpotifyAnalyzer.SpotifyAnalyzer import SpotifyAnalyzer
 
 
-def main() -> None:
-    """
-    The main function.
-    """
+app: Flask = SpotifyAnalyzer.app
+# The gooningcorn needs this ):
 
-    SpotifyAnalyzer.run()
-
-
-if __name__ == "__main__":
-    main()
+SpotifyAnalyzer.run()

@@ -18,4 +18,4 @@ ENV PYTHONPATH=/app/src
 
 EXPOSE 5000
 
-CMD ["python", "/app/src/main.py"]
+CMD ["gunicorn", "-b", "0.0.0.0:5000", "src.main:app", "--workers=2", "--threads=4"]

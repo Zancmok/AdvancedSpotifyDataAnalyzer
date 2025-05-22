@@ -34,12 +34,13 @@ class SpotifyAnalyzer:
 
         celery_tasks.spotify_api_process.delay()
 
-        SpotifyAnalyzer.app.run(
-            host=config.HOST,
-            port=config.PORT,
-            debug=config.DEBUG,
-            threaded=True
-        )
+        if config.DEBUG:
+            SpotifyAnalyzer.app.run(
+                host=config.HOST,
+                port=config.PORT,
+                debug=config.DEBUG,
+                threaded=True
+            )
 
     @staticmethod
     @app.route("/")
