@@ -1,107 +1,145 @@
 /* Dark Mode */
 body, .container, .section-box, .navbar, .btn, .list-group-item {
-background-color: #121212;
-color: white;
+    background-color: #121212;
+    color: white;
 }
 
 /* Header Style */
 #skam {
-background-color: #1e1e1e;
-padding: 20px 0;
+    background-color: #1e1e1e;
+    padding: 0;
+    height:10vh;
+}
+
+#skibidi {
+    background-color: #1e1e1e;
+    padding: 0;
+    height:5vh;
 }
 
 #but {
-background-color: #1DB954; /* Spotify green */
-color: white;
+    background-color: #1DB954; /* Spotify green */
+    color: white;
 }
 
 .navbar {
-box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 /* Section Box Styling */
 .section-box {
-border: 1px solid #333;
-padding: 1rem;
-height: 100%;
-text-align: center;
-background-color: #1e1e1e;
-border-radius: 8px;
-box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border: 1px solid #333;
+    padding: 1rem;
+    text-align: center;
+    background-color: #1e1e1e;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    position: relative;
+    overflow: hidden; /* Prevent section box from scrolling */
+    display: flex;
+    flex-direction: column;
 }
 
-/* Styling for List Group */
+/* Section box heading */
+.section-box h5 {
+    margin-bottom: 10px;
+    font-weight: bold;
+    flex-shrink: 0; /* Prevent the heading from shrinking */
+}
+
+/* Container for the lists with fixed height */
+.list-group {
+    flex-grow: 1;
+    overflow-y: auto !important;  /* Force container to scroll vertically */
+    overflow-x: hidden; /* Disable horizontal scrolling */
+    padding-right: 4px; /* Make room for the scrollbar */
+    min-height: 100px; /* Ensure some minimum height */
+    max-height: 100%; /* Prevent overflow */
+}
+
+/* Custom scrollbar styling */
+.list-group::-webkit-scrollbar {
+    width: 6px;
+}
+
+.list-group::-webkit-scrollbar-track {
+    background: #1e1e1e;
+}
+
+.list-group::-webkit-scrollbar-thumb {
+    background-color: #1DB954;
+    border-radius: 10px;
+}
+
+/* Firefox scrollbar */
+.list-group {
+    scrollbar-width: thin;
+    scrollbar-color: #1DB954 #1e1e1e;
+}
+
+/* Styling for List Group Items */
 .list-group-item {
-background-color: #1e1e1e;
-border: 1px solid #333;
-color: white;
+    background-color: #1e1e1e;
+    border: 1px solid #333;
+    color: white;
+    transition: background-color 0.3s ease;
+    margin-bottom: 4px;
+}
+
+.list-group-item:hover {
+    background-color: #2a2a2a;
 }
 
 /* Button Styling */
 .btn {
-border-radius: 8px;
-transition: all 0.3s ease;
+    border-radius: 8px;
+    transition: all 0.3s ease;
 }
 
 .btn:hover {
-transform: translateY(-2px);
-box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 /* Date Picker Styling */
-input[type="date"] {
-background-color: #2a2a2a;
-color: white;
-border: 1px solid #444;
-border-radius: 8px;
-padding: 8px;
+input[type="date"], select.form-select {
+    background-color: #2a2a2a;
+    color: white;
+    border: 1px solid #444;
+    border-radius: 8px;
+    padding: 8px;
 }
 
-input[type="date"]:focus {
-background-color: #333;
-box-shadow: 0 0 0 0.2rem rgba(29, 185, 84, 0.25); /* Spotify green glow */
-border-color: #1DB954;
+input[type="date"]:focus, select.form-select:focus {
+    background-color: #333;
+    box-shadow: 0 0 0 0.2rem rgba(29, 185, 84, 0.25); /* Spotify green glow */
+    border-color: #1DB954;
 }
 
-/* Fade-in Animations */
-.fade-in {
-animation: fadeIn 0.8s ease forwards;
+/* Left column - Top Users/Listeners */
+.col-md-2 .section-box {
+    height: 39vh;
+    margin-bottom: 20px;
 }
 
-@keyframes fadeIn {
-from {
-opacity: 0;
-transform: translateY(10px);
-}
-to {
-opacity: 1;
-transform: translateY(0);
-}
+/* Center column - Top Tracks */
+.col-md-6 .section-box {
+    height: 75vh;
+    margin-bottom: 20px;
 }
 
-/* Staggered animation for form elements */
-form .mb-3:nth-child(1) {
-animation-delay: 0.1s;
+/* Right column - Full height container */
+.col-md-4 .d-flex {
+    height: 75vh;
 }
 
-form .mb-3:nth-child(2) {
-animation-delay: 0.2s;
+/* Right column - Stacked sections (Creators and Albums) */
+.col-md-4 .section-box {
+    height: calc(50% - 12px) !important; /* Override inline styles and account for gap */
+    margin-bottom: 10px; /* Remove default margin since spacing is handled by mb-4 class */
 }
 
-form .mb-3:nth-child(3) {
-animation-delay: 0.3s;
-}
-
-form .d-grid {
-animation-delay: 0.4s;
-}
-
-/* For full height sections */
-.full-height {
-height: 100%;
-}
-
-/* Right column sections */
-.half-height {
-height: 50%;
+/* Override the full-height class for proper sizing */
+.section-box.full-height {
+    height: 75vh;
 }
