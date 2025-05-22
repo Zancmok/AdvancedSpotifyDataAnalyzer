@@ -155,18 +155,7 @@ form .d-grid {
     animation: itemFadeIn 0.5s ease forwards;
 }
 
-@keyframes itemFadeIn {
-    from {
-        opacity: 0;
-        background-color: #1DB954;
-        transform: translateX(-5px);
-    }
-    to {
-        opacity: 1;
-        background-color: #1e1e1e;
-        transform: translateX(0);
-    }
-}
+
 
 /* Ensure proper spacing and sizing for two-column layout */
 .col-md-6 .section-box {
