@@ -10,7 +10,9 @@ COPY .env /app/
 
 RUN mkdir -p /app/uploads
 
-RUN mkdir -p /app/database && touch /app/database/database.db
+RUN mkdir -p /app/database 
+
+RUN touch /app/database/database.db
 
 RUN pip install --no-cache-dir -r /app/requirements.txt
 
