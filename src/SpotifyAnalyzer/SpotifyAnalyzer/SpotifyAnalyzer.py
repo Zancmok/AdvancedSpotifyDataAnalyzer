@@ -5,9 +5,8 @@ from flask import Flask, render_template, session, redirect, Response, request, 
 from werkzeug.datastructures.file_storage import FileStorage
 from werkzeug.datastructures import ImmutableDict
 from typing import Any
-from SpotifyAnalyzer import SpotifyAnalyzer as config
-from SpotifyAnalyzer.SpotifyAnalyzer.DatabaseManager import DatabaseManager
-import SpotifyAnalyzer.SpotifyAnalyzer.celery_tasks as celery_tasks
+import SpotifyAnalyzer.config as config
+from SpotifyAnalyzer.DatabaseManager import DatabaseManager
 import filetype
 
 
@@ -31,8 +30,6 @@ class SpotifyAnalyzer:
         DatabaseManager.execute_script("create_base_values.sql")
 
         print(DatabaseManager.run_query("miku_dayo.sql"), flush=True)
-
-        celery_tasks.spotify_api_process.delay()
 
         SpotifyAnalyzer.app.run(
             host=config.HOST,

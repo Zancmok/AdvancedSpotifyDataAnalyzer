@@ -4,8 +4,8 @@ from time import sleep
 from zipfile import ZipFile, ZipInfo
 from typing import Any
 from celery import Celery
-from SpotifyAnalyzer import SpotifyAnalyzer as config
-from SpotifyAnalyzer.SpotifyAnalyzer.DatabaseManager import DatabaseManager
+import SpotifyAnalyzer.config as config
+from SpotifyAnalyzer.DatabaseManager import DatabaseManager
 from flask import session
 from spotipy import Spotify
 from spotipy.oauth2 import SpotifyClientCredentials
