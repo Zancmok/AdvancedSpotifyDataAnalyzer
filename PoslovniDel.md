@@ -77,7 +77,7 @@
 
 ## Viri prihodkov
 - Osnovna aplikacija je brezplačna  
-    - Omogoča osnovno individualno analizo poslušanja prek enostavne prijave s Spotify računom.
+    - Omogoča osnovno individualno analizo poslušanja prek enostavne prijave.
 
 - Reklame na spletni strani
 
