@@ -2,6 +2,9 @@ import os
 from typing import Any
 import SpotifyAnalyzer.config as config
 from functools import lru_cache
+from mysql.connector import connect
+from mysql.connector.pooling import PooledMySQLConnection
+from mysql.connector.abstracts import MySQLConnectionAbstract
 
 
 class DatabaseManager:
@@ -17,6 +20,16 @@ class DatabaseManager:
             contents: str = file.read()
 
         return contents
+
+    @staticmethod
+    def _get_connection() -> PooledMySQLConnection | MySQLConnectionAbstract:
+        return connect(
+            host=config.DB_HOST,
+            port=config.DB_PORT,
+            user=config.DB_USER,
+            password=config.DB_PASSWORD,
+            database=config.DB_NAME
+        )
 
     @staticmethod
     def run_query(script: str, **kwargs) -> Any:

@@ -19,15 +19,9 @@ class SpotifyAnalyzer:
 
     @staticmethod
     def run() -> None:
-        """
-        # Runs the main application.
-        """
-
         SpotifyAnalyzer.app.config["SECRET_KEY"] = config.FLASK_SECRET_KEY
 
         DatabaseManager.execute_script("create_db.sql")
-
-        DatabaseManager.execute_script("create_base_values.sql")
 
         print(DatabaseManager.run_query("miku_dayo.sql"), flush=True)
 
@@ -44,7 +38,7 @@ class SpotifyAnalyzer:
         if not session.get("user"):
             return redirect("/login")
 
-        return render_template("../templates/index.html")
+        return render_template("index.html")
 
     @staticmethod
     @app.route("/login", methods=["GET", "POST"])
@@ -53,7 +47,7 @@ class SpotifyAnalyzer:
             return redirect("/")
 
         if request.method == "GET":
-            return render_template("../templates/loginAndSignup.html")
+            return render_template("loginAndSignup.html")
 
         data: dict[str, Any] = request.get_json()
 
@@ -353,7 +347,6 @@ class SpotifyAnalyzer:
         }
 
         return out_data
-
 
     @staticmethod
     @app.route("/get-author-data", methods=["POST"])
