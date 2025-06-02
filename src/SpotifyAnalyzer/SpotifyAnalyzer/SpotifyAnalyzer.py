@@ -8,6 +8,7 @@ from typing import Any
 import SpotifyAnalyzer.config as config
 from SpotifyAnalyzer.DatabaseManager import DatabaseManager
 import filetype
+import time
 
 
 class SpotifyAnalyzer:
@@ -21,7 +22,13 @@ class SpotifyAnalyzer:
     def run() -> None:
         SpotifyAnalyzer.app.config["SECRET_KEY"] = config.FLASK_SECRET_KEY
 
+        time.sleep(10)
+
+        print("Before")
+
         DatabaseManager.execute_script("create_db.sql")
+
+        print("After")
 
         print(DatabaseManager.run_query("miku_dayo.sql"), flush=True)
 

@@ -14,3 +14,9 @@ DEFAULT_ICON_PATH: str = "/app/static/img/spotify.png"
 UPLOAD_FOLDER: str = '/app/uploads'
 SPOTIFY_CLIENT_ID: str = os.getenv("CLIENT_ID")
 SPOTIFY_CLIENT_SECRET: str = os.getenv("CLIENT_SECRET")
+
+DB_HOST: str = "mysql"
+DB_PORT: str = "3306"
+DB_USER: str = "spotify"
+DB_PASSWORD: str = "spotfypass"
+DB_NAME: str = "spotifydb"

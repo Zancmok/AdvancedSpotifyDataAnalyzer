@@ -35,10 +35,14 @@ class DatabaseManager:
     def run_query(script: str, **kwargs) -> Any:
         sql_query: str = DatabaseManager._load_query(script)
 
+        print(DatabaseManager._get_connection(), flush=True)
+
         return None
 
     @staticmethod
     def execute_script(script: str) -> None:
         sql_query: str = DatabaseManager._load_query(script)
 
-        return None
+        print("test", flush=True)
+
+        print(DatabaseManager._get_connection(), flush=True)
