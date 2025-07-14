@@ -4,7 +4,9 @@ import SpotifyAnalyzer.config as config
 from functools import lru_cache
 from mysql.connector import connect
 from mysql.connector.pooling import PooledMySQLConnection
-from mysql.connector.abstracts import MySQLConnectionAbstract
+from mysql.connector.abstracts import MySQLConnectionAbstract, MySQLCursorAbstract
+from mysql.connector.errors import DatabaseError
+from time import sleep
 
 
 class DatabaseManager:
@@ -23,26 +25,50 @@ class DatabaseManager:
 
     @staticmethod
     def _get_connection() -> PooledMySQLConnection | MySQLConnectionAbstract:
-        return connect(
-            host=config.DB_HOST,
-            port=config.DB_PORT,
-            user=config.DB_USER,
-            password=config.DB_PASSWORD,
-            database=config.DB_NAME
-        )
+        while True:
+            try:
+                return connect(
+                    host=config.DB_HOST,
+                    port=config.DB_PORT,
+                    user=config.DB_USER,
+                    password=config.DB_PASSWORD,
+                    database=config.DB_NAME
+                )
+            except DatabaseError:
+                sleep(.1)
 
     @staticmethod
     def run_query(script: str, **kwargs) -> Any:
         sql_query: str = DatabaseManager._load_query(script)
 
-        print(DatabaseManager._get_connection(), flush=True)
+        connection: PooledMySQLConnection | MySQLConnectionAbstract = DatabaseManager._get_connection()
 
-        return None
+        cursor: MySQLCursorAbstract = connection.cursor(dictionary=True, buffered=True)
+
+        cursor.execute(sql_query, kwargs)
+
+        connection.commit()
+
+        data: Any = cursor.fetchall()
+
+        cursor.close()
+        connection.close()
+
+        return data
 
     @staticmethod
     def execute_script(script: str) -> None:
         sql_query: str = DatabaseManager._load_query(script)
 
-        print("test", flush=True)
+        connection: PooledMySQLConnection | MySQLConnectionAbstract = DatabaseManager._get_connection()
 
-        print(DatabaseManager._get_connection(), flush=True)
+        cursor: MySQLCursorAbstract = connection.cursor(dictionary=True, buffered=True)
+
+        statements: list[str] = [stmt.strip() for stmt in sql_query.split(';') if stmt.strip()]
+
+        for statement in statements:
+            cursor.execute(statement, kwargs if '%(' in statement else ())
+
+        connection.commit()
+        cursor.close()
+        connection.close()

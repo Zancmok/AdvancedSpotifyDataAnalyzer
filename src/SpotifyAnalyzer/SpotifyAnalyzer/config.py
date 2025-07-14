@@ -18,5 +18,5 @@ SPOTIFY_CLIENT_SECRET: str = os.getenv("CLIENT_SECRET")
 DB_HOST: str = "mysql"
 DB_PORT: str = "3306"
 DB_USER: str = "spotify"
-DB_PASSWORD: str = "spotfypass"
+DB_PASSWORD: str = "spotifypass"
 DB_NAME: str = "spotifydb"

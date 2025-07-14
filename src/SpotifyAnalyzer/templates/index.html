@@ -1,109 +1,175 @@
-<!doctype html>
-<html lang="en">
-    <head>
-        <title>AdvancedSpotifyDataAnalyzer</title>
-        <meta charset="utf-8">
-        <meta author="Rožle Lipej">
-        <meta name="description" content="Spotify data analysis">
-        <meta name="keywords" content="Spotify, data, analysis">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-        <link rel="stylesheet" type="text/css" href="../static/css/index.css">
-    </head>
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spotify Analyzer</title>
+  <link href="https://cdn.jsdelivr.net/npm/beercss@3.4.11/dist/cdn/beer.min.css" rel="stylesheet">
+  <script type="module" src="https://cdn.jsdelivr.net/npm/beercss@3.4.11/dist/cdn/beer.min.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/material-icons/iconfont/material-icons.css" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+    }
 
-    <body>
-        <!-- Header -->
-        <header>
-            <nav class="navbar navbar-expand-lg bg-light py-0">
-                <div id="skam" class="container-fluid d-flex justify-content-between align-items-center">
-                    <h2><a href="/SpotifyAnalyzer/static" style="text-decoration:none;color:green">Spotify Analyzer</a></h2>
+    .sidebar {
+      position: fixed;
+      top: 64px; /* height of top bar */
+      left: 0;
+      width: 60px;
+      height: calc(100vh - 64px);
+      background-color: var(--background);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 1rem;
+      gap: 1rem;
+    }
 
-                    <h1 class="mx-auto">Main Page</h1>
+    .top-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 5;
+    }
 
-                    <div class="d-flex align-items-center">
+    .content {
+      margin-top: 64px; /* top bar height */
+      margin-left: 60px; /* sidebar width */
+      padding: 1rem;
+      display: grid;
+      gap: 1rem;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    }
 
-                        <a href="settings" class="btn btn-outline-primary me-2" type="button">Settings</a>
-                        <button id="but" class="btn btn-outline-success" type="button">Logout</button>
-                    </div>
-                </div>
-            </nav>
-        </header>
+    @media (max-width: 600px) {
+      .sidebar {
+        flex-direction: row;
+        height: auto;
+        width: 100%;
+        top: 64px;
+        left: 0;
+        right: 0;
+        padding: 0.5rem;
+        justify-content: space-around;
+      }
 
-        <!-- Dashboard Layout -->
-        <main class="container-fluid mt-4">
+      .content {
+        margin-left: 0;
+        margin-top: 128px; /* top bar + sidebar on mobile */
+      }
+    }
+    .top-bar .title {
+        font-size: 1.8rem;
+        font-weight: 600;
+    }
+  </style>
+</head>
+<body class="dark">
 
-            <!-- Static Info -->
-            <div id="skam" class="container-fluid d-flex align-items-center">
-                <label for="date-range" class="me-2">Select a Date Range:</label>
-                <select id="date-range" name="date-range" class="fade-in form-select w-auto" aria-label="Date Range">
-                    <option value="all-time">All Time</option>
-                    <option value="last-year">Last Year</option>
-                    <option value="last-month">Last Month</option>
-                </select>
-            </div>
+    <!-- Top Bar -->
+    <header class="bar top background surface top-bar">
+      <div class="max row middle-align space-between">
 
-            <!-- Main Grid -->
-            <div class="row mt-4">
-                <!-- Left Column -->
-                <div class="col-md-2 d-flex flex-column gap-3">
-                    <div id="topUsers" class="section-box">
-                        <p>Top Users</p>
-                        <div class="list-container">
-                            <ul id="usersList" class="list-group fade-in">
-                            </ul>
-                        </div>
-                    </div>
-                    <div id="topGenres" class="section-box mt">
-                        <p>Top Genre</p>
-                        <div class="list-container">
-                            <ul id="genresList" class="list-group fade-in">
-                            </ul>
-                        </div>
-                    </div>
-                </div>
+        <!-- Left buttons (optional placeholder) -->
+        <div class="row gap">
+          <!-- You can add more icons here later if needed -->
+        </div>
 
-                <!-- Center Column -->
-                <div class="col-md-8">
-                    <div class="section-box h-100">
-                        <h4>Top Tracks</h4>
-                        <div class="list-container">
-                            <ul id="trackList" class="list-group fade-in">
-                            </ul>
-                        </div>
-                    </div>
-                </div>
+        <!-- Center title -->
+        <div class="center-align grow">
+          <span class="title">Advanced Spotify Analyzer</span>
+        </div>
 
-                <!-- Right Column -->
-                <div class="col-md-2 d-flex flex-column gap-3">
-                    <div id="topCreators" class="section-box">
-                        <p>Top Creators</p>
-                        <div class="list-container">
-                            <ul id="creatorsList" class="list-group fade-in">
-                            </ul>
-                        </div>
-                    </div>
-                    <div id="topAlbums" class="section-box">
-                        <p>Top Albums</p>
-                        <div class="list-container">
-                            <ul id="albumsList" class="list-group fade-in">
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </main>
+        <!-- Right buttons -->
+        <div class="row gap">
+          <a href="friends"><button class="circle transparent" aria-label="Friends"><i class="material-icons">group</i></button></a>
+          <a href="settings"><button class="circle transparent" aria-label="Settings"><i class="material-icons">settings</i></button></a>
+          <a><button id="logout" class="circle transparent" aria-label="Logout"><i class="material-icons">logout</i></button></a>
+        </div>
+      </div>
+    </header>
 
-        <script>
-            // URL constants
-            const baseUrl = "{{ url_for('index') }}".slice(0, -6)
-            const logoutUrl = "{{ url_for('logout') }}";
-            const loginUrl = "{{ url_for('login') }}";
-            const dataUrl = "{{ url_for('get_main_page_data')}}"
-        </script>
-        <!-- Bootstrap Script -->
-        <script src="../static/js/util.js"></script>
-        <script src="../static/js/logout.js"></script>
-        <script src="../static/js/main_page.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-    </body>
+
+  <!-- Sidebar -->
+  <nav class="sidebar surface">
+    <button class="circle transparent"><i class="material-icons">home</i></button>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="content">
+    <div class="card">
+      <header class="padding strong">Top Creators</header>
+      <div class="padding">Data here</div>
+      <footer class="padding row middle-align space-between text-small">
+          <button id="prev-top-creators" class="circle transparent">
+          <i class="material-icons">chevron_left</i>
+          </button>
+
+          <span id="page-top-creators">Page: 1</span>
+
+          <button id="next-top-creators" class="circle transparent">
+          <i class="material-icons">chevron_right</i>
+          </button>
+      </footer>
+    </div>
+
+    <div class="card">
+      <header class="padding strong">Top Tracks</header>
+      <div class="padding">Data here</div>
+      <footer class="padding row middle-align space-between text-small">
+          <button id="prev-top-tracks" class="circle transparent">
+          <i class="material-icons">chevron_left</i>
+          </button>
+
+          <span id="page-top-tracks">Page: 1</span>
+
+          <button id="next-top-tracks" class="circle transparent">
+          <i class="material-icons">chevron_right</i>
+          </button>
+      </footer>
+
+    </div>
+
+    <div class="card">
+      <header class="padding strong">Top Albums</header>
+      <div class="padding">Data here</div>
+      <footer class="padding row middle-align space-between text-small">
+          <button id="prev-top-albums" class="circle transparent">
+          <i class="material-icons">chevron_left</i>
+          </button>
+
+          <span id="page-top-albums">Page: 1</span>
+
+          <button id="next-top-albums" class="circle transparent">
+          <i class="material-icons">chevron_right</i>
+          </button>
+      </footer>
+    </div>
+
+    <div class="card">
+      <header class="padding strong">Top Genres</header>
+      <div class="padding">Data here</div>
+      <footer class="padding row middle-align space-between text-small">
+          <button id="prev-top-genres" class="circle transparent">
+          <i class="material-icons">chevron_left</i>
+          </button>
+
+          <span id="page-top-genres">Page: 1</span>
+
+          <button id="next-top-genres" class="circle transparent">
+          <i class="material-icons">chevron_right</i>
+          </button>
+      </footer>
+    </div>
+  </main>
+  <script>
+    // URL constants
+    const baseUrl = "{{ url_for('index') }}".slice(0, -6)
+    const logoutUrl = "{{ url_for('logout') }}";
+    const loginUrl = "{{ url_for('login') }}";
+  </script>
+  <script src="../static/js/logout.js"></script>
+</body>
 </html>

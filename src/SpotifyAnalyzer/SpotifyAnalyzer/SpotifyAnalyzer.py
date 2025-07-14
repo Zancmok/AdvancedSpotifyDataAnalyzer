@@ -8,7 +8,6 @@ from typing import Any
 import SpotifyAnalyzer.config as config
 from SpotifyAnalyzer.DatabaseManager import DatabaseManager
 import filetype
-import time
 
 
 class SpotifyAnalyzer:
@@ -22,15 +21,9 @@ class SpotifyAnalyzer:
     def run() -> None:
         SpotifyAnalyzer.app.config["SECRET_KEY"] = config.FLASK_SECRET_KEY
 
-        time.sleep(10)
+        print(DatabaseManager.run_query("general/miku-dayo.sql"), flush=True)
 
-        print("Before")
-
-        DatabaseManager.execute_script("create_db.sql")
-
-        print("After")
-
-        print(DatabaseManager.run_query("miku_dayo.sql"), flush=True)
+        DatabaseManager.execute_script("general/create-db.sql")
 
         SpotifyAnalyzer.app.run(
             host=config.HOST,
@@ -71,7 +64,7 @@ class SpotifyAnalyzer:
             return {'success': False, 'reason': "You nameless or something?"}
 
         if data.get('type') == 'SIGNUP':
-            if DatabaseManager.run_query("get_user.sql", username=username):
+            if DatabaseManager.run_query("user-management/get-user.sql", username=username):
                 return {'success': False, 'reason': "User already exists."}
 
             password_bytes: bytes = password.encode('utf-8')
@@ -82,27 +75,21 @@ class SpotifyAnalyzer:
 
             decoded_hash: str = password_hash.decode('utf-8')
 
-            image: bytes
-            with open(config.DEFAULT_ICON_PATH, 'rb') as file:
-                image = file.read()
-
-            DatabaseManager.run_query("add_user.sql", username=username, password=decoded_hash, profile_picture=image)
+            DatabaseManager.run_query("user-management/add-user.sql", username=username, password_hash=decoded_hash)
 
             return {'success': True, 'reason': ""}
         else:
-            database_user: list[tuple[int | str, ...]] = DatabaseManager.run_query("get_user.sql", username=username)
+            database_user: list[dict[str, Any]] = DatabaseManager.run_query("user-management/get-user.sql", username=username)
 
             if not database_user:
                 return {'success': False, 'reason': "User does not exist."}
 
-            # [0] is the first and only field, [2] is the password in the said user field 
-            encoded_user_hash: bytes = database_user[0][2].encode('utf-8')
+            encoded_user_hash: bytes = database_user[0]["password_hash"].encode('utf-8')
 
             password_bytes: bytes = password.encode('utf-8')
 
             if bcrypt.checkpw(password_bytes, encoded_user_hash):
-                # [0] is the first and only field, [0] is the user_id in the said user field
-                session["user"] = database_user[0][0]
+                session["user"] = database_user[0]["id"]
 
                 return {'success': True, 'reason': ""}
             else:
@@ -122,47 +109,9 @@ class SpotifyAnalyzer:
             return redirect("/login")
 
         if request.method == "GET":
-            return render_template("../templates/settings.html", picture_path=url_for("avatar", user_id=session["user"]))
+            return render_template("settings.html")
 
-        files: ImmutableDict = request.files
-        data: dict[Any, str] = request.form
-
-        old_password: str = data.get("old_password")
-        new_username: str = data.get("new_username")
-        username_changed: bool = data.get("username_changed") == "true"
-        new_password: str = data.get("new_password")
-        password_changed: bool = data.get("password_changed") == "true"
-        pfp_changed: bool = data.get("pfp_changed") == "true"
-        pfp: FileStorage = files.get("pfp")
-
-        database_user: list[tuple[int | str, ...]] = DatabaseManager.run_query("get_user_by_id.sql",
-                                                                               id=session.get("user"))
-
-        encoded_user_hash: bytes = database_user[0][2].encode('utf-8')
-
-        password_bytes: bytes = old_password.encode('utf-8')
-
-        if not bcrypt.checkpw(password_bytes, encoded_user_hash):
-            return {'success': False, 'reason': "Password not correct"}
-
-        if username_changed and not DatabaseManager.run_query("user_already_exists.sql", username=new_username)[0][0]:
-            DatabaseManager.run_query("change_username.sql", username=new_username, id=session.get("user"))
-
-        if password_changed:
-            password_bytes: bytes = new_password.encode('utf-8')
-
-            salt: bytes = bcrypt.gensalt()
-
-            password_hash: bytes = bcrypt.hashpw(password_bytes, salt)
-
-            decoded_hash: str = password_hash.decode('utf-8')
-
-            DatabaseManager.run_query("change_password.sql", password=decoded_hash, id=session.get("user"))
-
-        if pfp_changed:
-            DatabaseManager.run_query("change_pfp.sql", profile_picture=pfp.stream.read(), id=session.get("user"))
-
-        return {'success': True, 'reason': ""}
+        return {'success': False, 'reason': "Something aint right here..."}
 
     @staticmethod
     @app.route("/data-upload", methods=["POST"])
@@ -198,32 +147,6 @@ class SpotifyAnalyzer:
         return {'success': True, 'reason': ""}
 
     @staticmethod
-    @app.route("/get-main-page-data", methods=["POST"])
-    def get_main_page_data() -> Response | dict[str, Any]:
-        if not session.get("user"):
-            return redirect("/login")
-
-        in_data: dict[Any, str] = request.get_json()
-
-        if "start_date" not in in_data or "end_date" not in in_data:
-            return {}
-
-        out_data: dict[str, Any] = {
-            "users": DatabaseManager.run_query("get_user_listen_times.sql", start_date=in_data["start_date"],
-                                               end_date=in_data["end_date"]),
-            "genres": DatabaseManager.run_query("get_genre_listen_times.sql", start_date=in_data["start_date"],
-                                                end_date=in_data["end_date"]),
-            "tracks": DatabaseManager.run_query("get_track_listen_times.sql", start_date=in_data["start_date"],
-                                                end_date=in_data["end_date"]),
-            "authors": DatabaseManager.run_query("get_author_listen_times.sql", start_date=in_data["start_date"],
-                                                 end_date=in_data["end_date"]),
-            "albums": DatabaseManager.run_query("get_album_listen_times.sql", start_date=in_data["start_date"],
-                                                end_date=in_data["end_date"])
-        }
-
-        return out_data
-
-    @staticmethod
     @app.route("/avatar/<int:user_id>")
     def avatar(user_id: int) -> str | Response:
         query_result: list = DatabaseManager.run_query("get_user_pfp.sql", id=user_id)
@@ -238,166 +161,3 @@ class SpotifyAnalyzer:
             return ""
 
         return Response(profile_picture, mimetype=mime_type)
-
-    @staticmethod
-    @app.route("/user/<int:user_id>")
-    def user(user_id: int) -> str | Response:
-        if not session.get("user"):
-            return redirect("/login")
-
-        return render_template("../templates/user.html", user_id=user_id)
-
-    @staticmethod
-    @app.route("/song/<int:song_id>")
-    def song(song_id: int) -> str | Response:
-        if not session.get("user"):
-            return redirect("/login")
-
-        return render_template("../templates/trackPage.html", song_id=song_id)
-
-    @staticmethod
-    @app.route("/genre/<int:genre_id>")
-    def genre(genre_id: int) -> str | Response:
-        if not session.get("user"):
-            return redirect("/login")
-
-        return render_template("../templates/genre.html", genre_id=genre_id)
-
-    @staticmethod
-    @app.route("/author/<int:author_id>")
-    def author(author_id: int) -> str | Response:
-        if not session.get("user"):
-            return redirect("/login")
-
-        return render_template("../templates/creator.html", author_id=author_id)
-
-    @staticmethod
-    @app.route("/album/<int:album_id>")
-    def album(album_id: int) -> str | Response:
-        if not session.get("user"):
-            return redirect("/login")
-
-        return render_template("../templates/album.html", album_id=album_id)
-
-    @staticmethod
-    @app.route("/get-user-data", methods=["POST"])
-    def get_user_data() -> Response | dict[str, Any]:
-        if not session.get("user"):
-            return redirect("/login")
-
-        in_data: dict[Any, str] = request.get_json()
-
-        if "start_date" not in in_data or "end_date" not in in_data or "user_id" not in in_data:
-            return {}
-
-        out_data: dict[str, Any] = {
-            "main": DatabaseManager.run_query("user_page/main.sql", user_id=in_data["user_id"]),
-            "genres": DatabaseManager.run_query("user_page/get_genre_listen_times.sql",
-                                                start_date=in_data["start_date"],
-                                                end_date=in_data["end_date"], user_id=in_data["user_id"]),
-            "tracks": DatabaseManager.run_query("user_page/get_track_listen_times.sql",
-                                                start_date=in_data["start_date"],
-                                                end_date=in_data["end_date"], user_id=in_data["user_id"]),
-            "authors": DatabaseManager.run_query("user_page/get_author_listen_times.sql",
-                                                 start_date=in_data["start_date"],
-                                                 end_date=in_data["end_date"], user_id=in_data["user_id"]),
-            "albums": DatabaseManager.run_query("user_page/get_album_listen_times.sql",
-                                                start_date=in_data["start_date"],
-                                                end_date=in_data["end_date"], user_id=in_data["user_id"])
-        }
-
-        return out_data
-
-    @staticmethod
-    @app.route("/get-genre-data", methods=["POST"])
-    def get_genre_data() -> Response | dict[str, Any]:
-        if not session.get("user"):
-            return redirect("/login")
-
-        in_data: dict[Any, str] = request.get_json()
-
-        if "start_date" not in in_data or "end_date" not in in_data or "genre_id" not in in_data:
-            return {}
-
-        out_data: dict[str, Any] = {
-            "main": DatabaseManager.run_query("genre_page/main.sql", genre_id=in_data["genre_id"]),
-            "users": DatabaseManager.run_query("genre_page/get_user_listen_times.sql", start_date=in_data["start_date"],
-                                               end_date=in_data["end_date"], genre_id=in_data["genre_id"]),
-            "tracks": DatabaseManager.run_query("genre_page/get_track_listen_times.sql",
-                                                start_date=in_data["start_date"],
-                                                end_date=in_data["end_date"], genre_id=in_data["genre_id"]),
-            "authors": DatabaseManager.run_query("genre_page/get_author_listen_times.sql",
-                                                 start_date=in_data["start_date"],
-                                                 end_date=in_data["end_date"], genre_id=in_data["genre_id"]),
-            "albums": DatabaseManager.run_query("genre_page/get_album_listen_times.sql",
-                                                start_date=in_data["start_date"],
-                                                end_date=in_data["end_date"], genre_id=in_data["genre_id"])
-        }
-
-        return out_data
-
-    @staticmethod
-    @app.route("/get-song-data", methods=["POST"])
-    def get_song_data() -> Response | dict[str, Any]:
-        if not session.get("user"):
-            return redirect("/login")
-
-        in_data: dict[Any, str] = request.get_json()
-
-        if "start_date" not in in_data or "end_date" not in in_data or "song_id" not in in_data:
-            return {}
-
-        out_data: dict[str, Any] = {
-            "main": DatabaseManager.run_query("song_page/main.sql", song_id=in_data["song_id"]),
-            "users": DatabaseManager.run_query("song_page/get_user_listen_times.sql", start_date=in_data["start_date"],
-                                               end_date=in_data["end_date"], song_id=in_data["song_id"])
-        }
-
-        return out_data
-
-    @staticmethod
-    @app.route("/get-author-data", methods=["POST"])
-    def get_author_data() -> Response | dict[str, Any]:
-        if not session.get("user"):
-            return redirect("/login")
-
-        in_data: dict[Any, str] = request.get_json()
-
-        if "start_date" not in in_data or "end_date" not in in_data or "author_id" not in in_data:
-            return {}
-
-        out_data: dict[str, Any] = {
-            "main": DatabaseManager.run_query("author_page/main.sql", author_id=in_data["author_id"]),
-            "users": DatabaseManager.run_query("author_page/get_user_listen_times.sql", start_date=in_data["start_date"],
-                                               end_date=in_data["end_date"], author_id=in_data["author_id"]),
-            "tracks": DatabaseManager.run_query("author_page/get_track_listen_times.sql",
-                                                start_date=in_data["start_date"],
-                                                end_date=in_data["end_date"], author_id=in_data["author_id"]),
-            "albums": DatabaseManager.run_query("author_page/get_album_listen_times.sql",
-                                                start_date=in_data["start_date"],
-                                                end_date=in_data["end_date"], author_id=in_data["author_id"])
-        }
-
-        return out_data
-
-    @staticmethod
-    @app.route("/get-album-data", methods=["POST"])
-    def get_album_data() -> Response | dict[str, Any]:
-        if not session.get("user"):
-            return redirect("/login")
-
-        in_data: dict[Any, str] = request.get_json()
-
-        if "start_date" not in in_data or "end_date" not in in_data or "album_id" not in in_data:
-            return {}
-
-        out_data: dict[str, Any] = {
-            "main": DatabaseManager.run_query("album_page/main.sql", album_id=in_data["album_id"]),
-            "users": DatabaseManager.run_query("album_page/get_user_listen_times.sql", start_date=in_data["start_date"],
-                                               end_date=in_data["end_date"], album_id=in_data["album_id"]),
-            "tracks": DatabaseManager.run_query("album_page/get_track_listen_times.sql",
-                                                start_date=in_data["start_date"],
-                                                end_date=in_data["end_date"], album_id=in_data["album_id"])
-        }
-
-        return out_data

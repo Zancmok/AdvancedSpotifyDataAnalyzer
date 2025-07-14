@@ -1,4 +1,4 @@
-const logout = document.getElementById("but");
+const logout = document.getElementById("logout");
 function logoutPress(event){
 	event.preventDefault();
 
