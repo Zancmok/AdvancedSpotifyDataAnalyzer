@@ -1,10 +1,11 @@
+import base64
 import os.path
 import bcrypt
 import zipfile
 from flask import Flask, render_template, session, redirect, Response, request, url_for
 from werkzeug.datastructures.file_storage import FileStorage
 from werkzeug.datastructures import ImmutableDict
-from typing import Any
+from typing import Any, Optional
 import SpotifyAnalyzer.config as config
 from SpotifyAnalyzer.DatabaseManager import DatabaseManager
 import filetype
@@ -111,7 +112,83 @@ class SpotifyAnalyzer:
         if request.method == "GET":
             return render_template("settings.html")
 
-        return {'success': False, 'reason': "Something aint right here..."}
+        data: Optional[dict[str, str]] = request.get_json()
+
+        if not data:
+            return {'success': False, 'reason': "Ehh?"}
+
+        data: dict[str, str]
+
+        if not data.get('type'):
+            return {'success': False, 'reason': "No type, bahhhh."}
+
+        if not data.get('password'):
+            return {'success': False, 'reason': "If no password than no miku for ya."}
+
+        database_user: list[dict[str, Any]] = DatabaseManager.run_query(
+            "user-management/get-user.sql",
+            username=DatabaseManager.run_query(
+                "user-management/get-user-name.sql",
+                id=session["user"])[0]["username"]
+        )
+
+        encoded_user_hash: bytes = database_user[0]["password_hash"].encode('utf-8')
+
+        password_bytes: bytes = data.get("password").encode('utf-8')
+
+        if not bcrypt.checkpw(password_bytes, encoded_user_hash):
+            return {'success': False, 'reason': "Password not correct."}
+
+        data_type: str = data.get('type')
+
+        match data_type:
+            case 'name':
+                if not data.get("name"):
+                    return {'success': False, 'reason': "Why update name when no name?"}
+
+                DatabaseManager.run_query(
+                    "user-management/update-data/update-name.sql",
+                    username=data.get("name"),
+                    id=session["user"]
+                )
+            case 'password':
+                if not data.get("new_password"):
+                    return {'success': False, 'reason': "Why update password when no password?"}
+
+                DatabaseManager.run_query(
+                    "user-management/update-data/update-password.sql",
+                    password=data.get("new_password"),
+                    id=session["user"]
+                )
+            case 'pfp':
+                pfp_data: Optional[str] = data.get("pfp")
+
+                if not pfp_data:
+                    return {'success': False, 'reason': "Why update password when no pfp?"}
+                pfp_data: str
+
+                if not pfp_data.startswith("data:image/"):
+                    return {'success': False, 'reason': "That's not an image..."}
+
+                try:
+                    # Split off the base64 header and decode
+                    header: str
+                    encoded: str
+                    header, encoded = pfp_data.split(",", 1)
+
+                    pfp_blob: bytes = base64.b64decode(encoded)
+                except Exception as e:
+                    return {'success': False, 'reason': "Couldn't decode image data."}
+
+                DatabaseManager.run_query(
+                    "user-management/update-data/update-pfp.sql",
+                    pfp=pfp_blob,
+                    id=session["user"]
+                )
+            case _:
+                return {'success': False, 'reason': "Something aint right here..."}
+
+        return {'success': True, 'reason': ""}
 
     @staticmethod
     @app.route("/data-upload", methods=["POST"])
@@ -149,12 +226,20 @@ class SpotifyAnalyzer:
     @staticmethod
     @app.route("/avatar/<int:user_id>")
     def avatar(user_id: int) -> str | Response:
-        query_result: list = DatabaseManager.run_query("get_user_pfp.sql", id=user_id)
+        query_result: list[dict[str, bytes]] = DatabaseManager.run_query(
+            "user-management/get-user-pfp.sql",
+            id=user_id
+        )
 
         if not query_result:
             return ""
 
-        profile_picture: bytes = query_result[0][0]
+        profile_picture: Optional[bytes] = query_result[0]["profile_picture"]
+
+        if not profile_picture:
+            return ""
+        profile_picture: bytes
+
         mime_type: str = filetype.guess(profile_picture).MIME
 
         if not mime_type:

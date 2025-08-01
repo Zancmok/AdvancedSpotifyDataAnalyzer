@@ -61,7 +61,7 @@ CREATE TABLE IF NOT EXISTS `User` (
     `username` VARCHAR(20) NOT NULL UNIQUE,
     `password_hash` VARCHAR(255) NOT NULL,
     `permission_level` INT NOT NULL DEFAULT 0,
-    `profile_picture` BLOB DEFAULT NULL,
+    `profile_picture` LONGBLOB DEFAULT NULL,
     `last_time_uploaded` DATETIME DEFAULT NULL
 );
 

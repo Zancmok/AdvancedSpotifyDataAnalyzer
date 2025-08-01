@@ -1,157 +1,267 @@
 <!DOCTYPE html>
-<html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<meta name="author" content="Rozle Lipej">
-		<meta name="description" content="Spotify data analysis settings page">
-		<meta name="keywords" content="Spotify, settings">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<title>AdvancedSpotifyDataAnalyzer - Settings</title>
-		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-		<link rel="stylesheet" href="../static/css/settings.css">
-	</head>
-	<body>
-		<!-- Header Navigation -->
-		<div class="header">
-			<div class="container">
-				<div class="d-flex justify-content-between align-items-center">
-					<h2><a href="/SpotifyAnalyzer/static" style="text-decoration:none;color:green">Spotify Analyzer</a></h2>
-					<nav>
-						<ul class="nav align-items-center">
-							<!-- Dropdown Menu -->
-							<li class="nav-item dropdown me-2">
-								<button class="btn btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-									Menu
-								</button>
-								<ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
-									<li><a class="dropdown-item" href="Albums">Albums</a></li>
-									<li><a class="dropdown-item" href="Creator">Creator</a></li>
-									<li><a class="dropdown-item" href="Genre">Genre</a></li>
-									<li><a class="dropdown-item" href="Tracks">Tracks</a></li>
-									<li><a class="dropdown-item" href="Users">Users</a></li>
-								</ul>
-							</li>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Spotify Analyzer</title>
 
-							<!-- Logout Button -->
-							<li class="nav-item">
-								<button id="but" class="btn btn-outline-success" type="button">Logout</button>
-							</li>
-						</ul>
-					</nav>
-				</div>
-			</div>
-		</div>
+  <!-- BeerCSS and Material Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/beercss@3.4.11/dist/cdn/beer.min.css" rel="stylesheet">
+  <script type="module" src="https://cdn.jsdelivr.net/npm/beercss@3.4.11/dist/cdn/beer.min.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/material-icons/iconfont/material-icons.css" rel="stylesheet">
 
-		<div class="container">
-			<div class="row justify-content-center">
-				<div class="col-md-8">
-					<div class="card p-4">
-						<h3 class="text-center mb-4">Settings</h3>
-						
-						<!-- Nav tabs for different setting categories -->
-						<ul class="nav nav-tabs" id="settingsTabs" role="tablist">
-							<li class="nav-item" role="presentation">
-								<a class="nav-link active" id="account-tab" data-bs-toggle="tab" href="#account" role="tab" aria-controls="account" aria-selected="true">Account</a>
-							</li>
-							<li class="nav-item" role="presentation">
-								<a class="nav-link" id="spotify-tab" data-bs-toggle="tab" href="#spotify" role="tab" aria-controls="spotify" aria-selected="false">Spotify Connection</a>
-							</li>
-						</ul>
-						
-						<div class="tab-content mt-3" id="settingsTabsContent">
-							<!-- Account Settings -->
-							<div class="tab-pane fade show active" id="account" role="tabpanel" aria-labelledby="account-tab">
-								<div class="text-center mb-4">
-									<div class="profile-pic">
-										<img id="profileImage" src="{{ picture_path }}" alt="Profile Picture" class="rounded-circle" width="150" height="150">
-									</div>
-									<button class="btn btn-outline-light btn-sm mb-3" id="change-photo-btn">Change Photo</button>
-									<!-- Hidden file input for selecting a new profile picture -->
-									<input type="file" id="fileInput" accept="image/*">
-								</div>
-								
-								<form id="user-data">
-									<div class="mb-3">
-										<label for="username" class="form-label">New username</label>
-										<input type="text" class="form-control" id="new-username" placeholder="CurrentUsername">
-									</div>
-									<div class="mb-3">
-										<label for="current-password" class="form-label">Current Password</label>
-										<input type="password" class="form-control" id="current-password">
-									</div>
-									<div class="mb-3">
-										<label for="new-password" class="form-label">New Password</label>
-										<input type="password" class="form-control" id="new-password">
-									</div>
-									<div class="mb-3">
-										<label for="confirm-new-password" class="form-label">Confirm New Password</label>
-										<input type="password" class="form-control" id="confirm-new-password">
-										<p id="passwordMatch" class="mt-2"></p>
-									</div>
-									<div class="d-grid gap-2">
-										<button type="submit" class="btn btn-success">Save Changes</button>
-									</div>
-								</form>
-							</div>
-							
-							
-							<!-- Spotify Connection -->
-							<div class="tab-pane fade" id="spotify" role="tabpanel" aria-labelledby="spotify-tab">
-								<div class="empty-tab-content">
-									<input type="file" id="zipFile" accept=".zip">
-									<br>
-									<br>
-									<button onclick="uploadZip()">Upload</button>
-								</div>
-							</div>
-							
-							
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
+  <style>
+    body {
+      margin: 0;
+    }
 
-		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-		<!-- Animation script -->
-		<script>// settings.js (containing only animations)
-			document.addEventListener('DOMContentLoaded', function() {
-				// Add enhanced animation handling for tab switching
-				const tabLinks = document.querySelectorAll('.nav-link');
-				
-				tabLinks.forEach(tab => {
-					tab.addEventListener('click', function() {
-						// First reset all animations by removing and re-adding the show class
-						document.querySelectorAll('.tab-pane').forEach(pane => {
-							if (pane.classList.contains('show')) {
-								pane.style.opacity = '0';
-								pane.style.transform = 'translateY(10px)';
-								
-								// Force reflow to ensure animation plays again
-								void pane.offsetWidth;
-							}
-						});
-						
-						// Give time for the animation to play
-						setTimeout(() => {
-							const targetTab = document.querySelector(this.getAttribute('href'));
-							if (targetTab) {
-								targetTab.style.opacity = '1';
-								targetTab.style.transform = 'translateY(0)';
-							}
-						}, 50);
-					});
-				});
-			});
-		</script>
+    .sidebar {
+      position: fixed;
+      top: 64px;
+      left: 0;
+      width: 60px;
+      height: calc(100vh - 64px);
+      background-color: var(--background);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 1rem;
+      gap: 1rem;
+    }
 
-		<script>
-			const logoutUrl = "{{ url_for('logout')}}"
-			const loginUrl = "{{ url_for('login') }}"
-			const zipUploadUrl = "{{ url_for('data_upload')}}"
-			const settingUrl = "{{ url_for('settings')}}"
-		</script>
-		<script src="../static/js/settings.js"></script>
-		<script src="../static/js/logout.js"></script>
-	</body>
+    .top-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 5;
+    }
+
+    .content {
+      margin-top: 64px;
+      margin-left: 60px;
+      padding: 1rem;
+    }
+
+    @media (max-width: 600px) {
+      .sidebar {
+        flex-direction: row;
+        height: auto;
+        width: 100%;
+        top: 64px;
+        left: 0;
+        right: 0;
+        padding: 0.5rem;
+        justify-content: space-around;
+      }
+
+      .content {
+        margin-left: 0;
+        margin-top: 128px;
+      }
+    }
+
+    .top-bar .title {
+      font-size: 1.8rem;
+      font-weight: 600;
+    }
+
+    #settings-container {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    #global-settings {
+      margin-top: 2rem;
+    }
+  </style>
+</head>
+<body class="dark">
+
+  <!-- Top Bar -->
+  <header class="bar top background surface top-bar">
+    <div class="max row middle-align space-between">
+      <div class="row gap"></div>
+      <div class="center-align grow">
+        <span class="title">Advanced Spotify Analyzer</span>
+      </div>
+      <div class="row gap">
+        <a href="friends"><button class="circle transparent" aria-label="Friends"><i class="material-icons">group</i></button></a>
+        <a href="settings"><button class="circle transparent" aria-label="Settings"><i class="material-icons">settings</i></button></a>
+        <a><button id="logout" class="circle transparent" aria-label="Logout"><i class="material-icons">logout</i></button></a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Sidebar -->
+  <nav class="sidebar surface">
+    <button class="circle transparent"><i class="material-icons">home</i></button>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="content">
+    <!-- Option Selector -->
+    <div class="row gap padding">
+      <button class="chip" onclick="showCard('name')">Change Name</button>
+      <button class="chip" onclick="showCard('pfp')">Change Profile Picture</button>
+      <button class="chip" onclick="showCard('password')">Change Password</button>
+    </div>
+
+    <!-- Settings Cards Container -->
+    <div id="settings-container">
+      <!-- Change Name -->
+      <div id="card-name" class="card">
+        <header class="padding strong">Change Name</header>
+        <div class="padding">
+          <div class="field label border round">
+            <input type="text" placeholder="" />
+            <label>Name</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Change Profile Picture -->
+      <div id="card-pfp" class="card" style="display: none;">
+        <header class="padding strong">Change Profile Picture</header>
+        <div class="padding">
+          <div class="field label border round">
+            <button onclick="document.getElementById('pfp-input').click()">Choose Image</button>
+            <input id="pfp-input" type="file" accept="image/*" style="display: none" />
+          </div>
+          <div id="pfp-preview-container" style="margin-top: 1rem; display: none;">
+            <p style="margin-bottom: 0.5rem;">Preview:</p>
+            <img id="pfp-preview" style="max-width: 100px; border-radius: 50%; border: 2px solid var(--outline);" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Change Password -->
+      <div id="card-password" class="card" style="display: none;">
+        <header class="padding strong">Change Password</header>
+        <div class="padding">
+          <div class="field label border round">
+            <input type="password" placeholder="" />
+            <label>New Password</label>
+          </div>
+          <div class="field label border round">
+            <input type="password" placeholder="" />
+            <label>Repeat New Password</label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Global Settings: Password + Save -->
+    <div id="global-settings" class="card">
+      <header class="padding strong">Confirm Changes</header>
+      <div class="padding">
+        <div class="field label border round">
+          <input id="settings-password" type="password" placeholder="" />
+          <label>Password</label>
+        </div>
+      </div>
+      <footer class="padding">
+        <button id="save-settings" class="primary">Save Settings</button>
+      </footer>
+    </div>
+  </main>
+
+  <!-- Scripts -->
+  <script>
+const baseUrl = "{{ url_for('index') }}".slice(0, -6);
+const logoutUrl = "{{ url_for('logout') }}";
+const loginUrl = "{{ url_for('login') }}";
+const settingsUrl = "{{ url_for('settings') }}"
+
+let currentCard = 'name';
+
+function showCard(id) {
+  const cards = ['name', 'pfp', 'password'];
+  cards.forEach(card => {
+    document.getElementById(`card-${card}`).style.display = (card === id) ? 'block' : 'none';
+  });
+  currentCard = id;
+}
+
+// File preview for profile picture
+document.getElementById('pfp-input').addEventListener('change', function (e) {
+  const file = e.target.files[0];
+  const previewContainer = document.getElementById('pfp-preview-container');
+  const preview = document.getElementById('pfp-preview');
+
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = function (event) {
+      preview.src = event.target.result;
+      previewContainer.style.display = 'block';
+    };
+    reader.readAsDataURL(file);
+  } else {
+    previewContainer.style.display = 'none';
+    preview.src = '';
+  }
+});
+
+// Save handler
+document.getElementById('save-settings').addEventListener('click', async () => {
+  const pwd = document.getElementById('settings-password').value;
+  if (!pwd) {
+    alert('Please enter your password to confirm changes.');
+    return;
+  }
+
+  let payload = { password: pwd, type: currentCard };
+
+  if (currentCard === 'name') {
+    const nameInput = document.querySelector('#card-name input').value;
+    if (!nameInput.trim()) return alert("Name can't be empty.");
+    payload.name = nameInput.trim();
+  }
+
+  if (currentCard === 'password') {
+    const inputs = document.querySelectorAll('#card-password input');
+    const newPassword = inputs[0].value;
+    const confirmPassword = inputs[1].value;
+    if (!newPassword || newPassword !== confirmPassword) {
+      return alert('Passwords do not match or are empty.');
+    }
+    payload.new_password = newPassword;
+  }
+
+  if (currentCard === 'pfp') {
+    const fileInput = document.getElementById('pfp-input');
+    const file = fileInput.files[0];
+    if (!file) return alert('Please select a profile picture.');
+
+    const base64 = await new Promise(resolve => {
+      const reader = new FileReader();
+      reader.onload = e => resolve(e.target.result);
+      reader.readAsDataURL(file);
+    });
+
+    payload.pfp = base64;
+  }
+
+  try {
+    const response = await fetch(settingsUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payload)
+    });
+
+    if (!response.ok) throw new Error('Failed to save settings.');
+    const result = await response.json();
+    alert(result.message || 'Settings saved!');
+  } catch (err) {
+    console.error(err);
+    alert('Error saving settings.');
+  }
+});
+
+  </script>
+  <script src="../static/js/logout.js"></script>
+</body>
 </html>
