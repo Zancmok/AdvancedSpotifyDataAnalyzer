@@ -1,0 +1,1 @@
+INACTIVE_INTERVAL: int = 5

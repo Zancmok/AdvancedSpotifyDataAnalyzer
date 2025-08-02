@@ -1,4 +1,5 @@
 import base64
+import datetime
 import os.path
 import bcrypt
 import zipfile
@@ -196,6 +197,10 @@ class SpotifyAnalyzer:
         if 'file' not in request.files:
             return {'success': False, 'reason': "No file part"}
 
+        last_time: datetime.datetime = DatabaseManager.run_query("user-management/get-last-time-updated.sql", id=session['user'])
+
+        # TODO: Make lest time check thingy!
+
         file: FileStorage = request.files['file']
 
         if not zipfile.is_zipfile(file.stream):
@@ -216,6 +221,10 @@ class SpotifyAnalyzer:
 
         except Exception as e:
             print(e, flush=True)
+
+        DatabaseManager.run_query("user-management/update-data/update-last-time-uploaded.sql",
+                                  new_time=datetime.datetime.now(),
+                                  id=session.get("user"))
 
         return {'success': True, 'reason': ""}
 

@@ -1,5 +1,8 @@
+from SpotifyInterface.SpotifyInterface import SpotifyInterface
+
+
 def main() -> None:
-    print("Hello, World!")
+    SpotifyInterface.run()
 
 
 if __name__ == "__main__":
