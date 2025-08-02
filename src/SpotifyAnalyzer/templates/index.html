@@ -82,9 +82,13 @@
           <span class="title">Advanced Spotify Analyzer</span>
         </div>
 
+          <!-- Hidden file input for .zip files -->
+<input type="file" id="zipFileInput" accept=".zip" style="display: none;" />
+
         <!-- Right buttons -->
         <div class="row gap">
           <a href="friends"><button class="circle transparent" aria-label="Friends"><i class="material-icons">group</i></button></a>
+          <a><button class="circle transparent" aria-label="Upload" onclick="document.getElementById('zipFileInput').click();"><i class="material-icons">upload</i></button></a>
           <a href="settings"><button class="circle transparent" aria-label="Settings"><i class="material-icons">settings</i></button></a>
           <a><button id="logout" class="circle transparent" aria-label="Logout"><i class="material-icons">logout</i></button></a>
         </div>
@@ -165,10 +169,55 @@
     </div>
   </main>
   <script>
-    // URL constants
-    const baseUrl = "{{ url_for('index') }}".slice(0, -6)
-    const logoutUrl = "{{ url_for('logout') }}";
-    const loginUrl = "{{ url_for('login') }}";
+// URL constants
+const baseUrl = "{{ url_for('index') }}".slice(0, -6)
+const logoutUrl = "{{ url_for('logout') }}";
+const loginUrl = "{{ url_for('login') }}";
+const uploadFileUrl = "{{ url_for('data_upload') }}";
+
+document.getElementById('zipFileInput').addEventListener('change', (event) => {
+  const file = event.target.files[0];
+  if (file) {
+    const confirmed = confirm(`You selected "${file.name}". Do you want to continue?`);
+    if (confirmed) {
+      console.log("User confirmed file:", file.name);
+
+      const formData = new FormData();
+      formData.append('file', file);
+
+      fetch(uploadFileUrl, {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => {
+        if (!response.ok) throw new Error(`Upload failed: ${response.status} ${response.statusText}`);
+        return response.json(); // or response.text() depending on backend
+      })
+      .then(result => {
+        if (result.success === true)
+        {
+            console.log("Upload successful!", result);
+            alert('Upload successful!');
+            event.target.value = "";
+        }
+        else
+        {
+            alert(result.reason);
+        }
+      })
+      .catch(error => {
+        console.error("Error uploading file:", error);
+        alert('Upload failed: ' + error.message);
+      });
+
+    } else {
+      console.log("User cancelled file:", file.name);
+      event.target.value = "";
+    }
+  }
+});
+
+
   </script>
   <script src="../static/js/logout.js"></script>
 </body>

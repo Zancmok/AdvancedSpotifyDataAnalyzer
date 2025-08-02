@@ -214,10 +214,6 @@ class SpotifyAnalyzer:
 
             file.save(file_path)
 
-            # celery_tasks.process.delay(file_path)
-
-            celery_tasks.process(file_path)
-
         except Exception as e:
             print(e, flush=True)
 
