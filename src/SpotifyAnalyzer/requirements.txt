@@ -1,6 +1,4 @@
 flask
 bcrypt
-spotipy==2.25.1
-python-dotenv
 filetype
 mysql-connector-python

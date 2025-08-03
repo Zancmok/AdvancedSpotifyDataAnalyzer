@@ -108,3 +108,20 @@ CREATE TABLE IF NOT EXISTS `SongListen` (
     FOREIGN KEY (user_id) REFERENCES `User`(`id`),
     FOREIGN KEY (song_uri) REFERENCES `Song`(`uri`)
 );
+
+CREATE TABLE IF NOT EXISTS `Queue` (
+    `id` INT AUTO_INCREMENT PRIMARY KEY,
+    `owner` INT,
+    `song_uri` VARCHAR(32),
+    `timestamp` DATETIME NOT NULL,
+    `ms_played` INT NOT NULL,
+    `conn_country` VARCHAR(20) NOT NULL,
+    `ip_addr` VARCHAR(32) NOT NULL,
+    `reason_start` VARCHAR(20) NOT NULL,
+    `reason_end` VARCHAR(20) NOT NULL,
+    `shuffle` TINYINT(1) NOT NULL,
+    `skipped` TINYINT(1) NOT NULL,
+    `offline` TINYINT(1) NOT NULL,
+    `incognito_mode` TINYINT(1) NOT NULL,
+    FOREIGN KEY (owner) REFERENCES `User`(`id`)
+);

@@ -1,6 +1,6 @@
 import os
 from typing import Any
-import SpotifyAnalyzer.config as config
+import SpotifyInterface.config as config
 from functools import lru_cache
 from mysql.connector import connect
 from mysql.connector.pooling import PooledMySQLConnection

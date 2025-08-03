@@ -1,0 +1,2 @@
+SELECT * FROM `Queue`
+LIMIT 1;
