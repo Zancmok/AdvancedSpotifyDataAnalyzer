@@ -8,6 +8,7 @@ from spotipy import Spotify
 from spotipy.oauth2 import SpotifyClientCredentials
 from zipfile import ZipFile, ZipInfo
 import json
+import datetime
 
 
 class SpotifyInterface:
@@ -16,35 +17,58 @@ class SpotifyInterface:
         client_secret=config.SPOTIFY_CLIENT_SECRET
     ))
 
-    _fields_required: list[str] = ["spotify_track_uri", "ms_played", "conn_country", "ip_addr",
+    _fields_required: list[str] = ["spotify_track_uri", "ts", "ms_played", "conn_country", "ip_addr",
                                    "incognito_mode", "offline", "skipped", "shuffle", "reason_end",
                                    "reason_start"]
+    _fields_not_null: list[str] = ["spotify_track_uri", "ts", "ms_played"]
+
     @staticmethod
     def _listen_valid(listen: dict[str, Any]) -> bool:
         for field in SpotifyInterface._fields_required:
             if field not in listen:
+                return False
 
+            if field in SpotifyInterface._fields_not_null and field is None:
                 return False
 
         return True
 
     @staticmethod
-    def _analyze_json(zip_file: ZipFile, file: ZipInfo) -> None:
+    def _analyze_json(user_id: int, zip_file: ZipFile, file: ZipInfo) -> None:
         contents: Any = json.loads(zip_file.read(file))
 
         if type(contents) is not list:
             return
         contents: list
 
-        for json_element in contents:
-            if type(json_element) is not dict:
-                continue
-            json_element: dict[str, Any]
+        CHUNK_SIZE: int = 500
+        for bundle in [contents[i:i + CHUNK_SIZE] for i in range(0, len(contents), CHUNK_SIZE)]:
+            valid_elements: list[dict[str, Any]] = []
+            for json_element in bundle:
+                if type(json_element) is not dict:
+                    continue
+                json_element: dict[str, Any]
 
-            if not SpotifyInterface._listen_valid(json_element):
-                continue
+                if not SpotifyInterface._listen_valid(json_element):
+                    continue
 
-            # Hia
+                valid_elements.append({
+                    "owner": user_id,
+                    "song_uri": json_element["spotify_track_uri"],
+                    "timestamp": datetime.datetime.fromisoformat(json_element["ts"].replace("Z", "+00:00")).replace(
+                        tzinfo=None),
+                    "ms_played": json_element["ms_played"],
+                    "conn_country": json_element["conn_country"],
+                    "ip_addr": json_element["ip_addr"],
+                    "incognito_mode": json_element["incognito_mode"],
+                    "offline": json_element["offline"],
+                    "skipped": json_element["skipped"],
+                    "shuffle": json_element["shuffle"],
+                    "reason_end": json_element["reason_end"],
+                    "reason_start": json_element["reason_start"]
+                })
+
+            DatabaseManager.execute_many("queue/insert-into-queue.sql", valid_elements)
 
     @staticmethod
     def _process_zip_file(user_id: int) -> None:
@@ -55,9 +79,17 @@ class SpotifyInterface:
                 if not file.filename.endswith('.json'):
                     continue
 
-                SpotifyInterface._analyze_json(zip_file, file)
+                SpotifyInterface._analyze_json(user_id, zip_file, file)
 
         os.remove(path)
+
+    @staticmethod
+    def _process_tracks(tracks: list[dict[str, Any]]) -> None:
+        #print(SpotifyInterface.spotify.tracks([x["song_uri"] for x in tracks]), flush=True)
+
+        # TODO: Were here!
+
+        sleep(20000)
 
     @staticmethod
     def run() -> None:
@@ -81,6 +113,8 @@ class SpotifyInterface:
 
                 continue
 
-            print(DatabaseManager.run_query("general/get-first-queue-element.sql"), flush=True)
+            tracks: list[dict[str, Any]]
+            if tracks := DatabaseManager.run_query("queue/get-first-50-queue-elements.sql"):
+                SpotifyInterface._process_tracks(tracks)
 
             sleep(config.INACTIVE_INTERVAL)

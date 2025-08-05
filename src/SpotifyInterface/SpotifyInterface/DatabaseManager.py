@@ -72,3 +72,18 @@ class DatabaseManager:
         connection.commit()
         cursor.close()
         connection.close()
+
+    @staticmethod
+    def execute_many(script: str, data: list[dict[str, Any]]) -> None:
+        if not data:
+            return
+
+        sql_query: str = DatabaseManager._load_query(script)
+        connection: PooledMySQLConnection | MySQLConnectionAbstract = DatabaseManager._get_connection()
+        cursor: MySQLCursorAbstract = connection.cursor()
+
+        cursor.executemany(sql_query, data)
+        connection.commit()
+
+        cursor.close()
+        connection.close()

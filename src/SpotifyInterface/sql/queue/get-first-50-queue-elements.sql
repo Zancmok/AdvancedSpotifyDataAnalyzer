@@ -1,2 +1,2 @@
 SELECT * FROM `Queue`
-LIMIT 1;
+LIMIT 50;
