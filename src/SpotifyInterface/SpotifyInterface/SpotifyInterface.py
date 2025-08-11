@@ -84,12 +84,62 @@ class SpotifyInterface:
         os.remove(path)
 
     @staticmethod
+    def _new_tracks(song_uris: list[str]) -> None:
+        while True:
+            try:
+                processed_tracks: list[dict[str, Any]] = SpotifyInterface.spotify.tracks(song_uris)
+            except Exception as e:
+                print(e, flush=True)
+                sleep(1)
+                continue
+
+            # Ya are here mate
+
+            break
+
+    @staticmethod
     def _process_tracks(tracks: list[dict[str, Any]]) -> None:
-        #print(SpotifyInterface.spotify.tracks([x["song_uri"] for x in tracks]), flush=True)
+        def _format_listens(listens: list[dict[str, Any]]) -> list[dict[str, Any]]:
+            return [{
+                "user_id": l["owner"],
+                "song_uri": l["song_uri"],
+                "timestamp": l["timestamp"],
+                "ms_played": l["ms_played"],
+                "conn_country": l["conn_country"],
+                "ip_addr": l["ip_addr"],
+                "reason_start": l["reason_start"],
+                "reason_end": l["reason_end"],
+                "shuffle": l["shuffle"],
+                "skipped": l["skipped"],
+                "offline": l["offline"],
+                "incognito_mode": l["incognito_mode"]
+            } for l in listens]
 
-        # TODO: Were here!
+        existing_tracks: list[dict[str, Any]] = DatabaseManager.execute_with_list(
+            "song-processing/get-existing-songs.sql",
+            [t["song_uri"] for t in tracks]
+        )
 
-        sleep(20000)
+        DatabaseManager.execute_many(
+            "song-processing/add-song-listens.sql",
+            _format_listens(existing_tracks)
+        )
+
+        existing_uris: set = {t["song_uri"] for t in existing_tracks}
+        new_tracks_listens: list[dict[str, Any]] = [t for t in tracks if t["song_uri"] not in existing_uris]
+
+        if new_tracks_listens:
+            SpotifyInterface._new_tracks([t["song_uri"] for t in new_tracks_listens])
+
+            DatabaseManager.execute_many(
+                "song-processing/add-song-listens.sql",
+                _format_listens(new_tracks_listens)
+            )
+
+        DatabaseManager.execute_with_list(
+            "song-processing/remove-queue-elements.sql",
+            [t["song_uri"] for t in tracks]
+        )
 
     @staticmethod
     def run() -> None:
@@ -113,8 +163,8 @@ class SpotifyInterface:
 
                 continue
 
-            tracks: list[dict[str, Any]]
-            if tracks := DatabaseManager.run_query("queue/get-first-50-queue-elements.sql"):
+            tracks: list[dict[str, Any]] = DatabaseManager.run_query("queue/get-first-50-queue-elements.sql")
+            if tracks:
                 SpotifyInterface._process_tracks(tracks)
 
             sleep(config.INACTIVE_INTERVAL)

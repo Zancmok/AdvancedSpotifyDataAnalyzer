@@ -87,3 +87,22 @@ class DatabaseManager:
 
         cursor.close()
         connection.close()
+
+    @staticmethod
+    def execute_with_list(script: str, values: list[Any]) -> Any:
+        sql_query: str = DatabaseManager._load_query(script)
+
+        sql_query = sql_query.replace(f"__miku__", ', '.join(['%s'] * len(values)))
+
+        connection: PooledMySQLConnection | MySQLConnectionAbstract = DatabaseManager._get_connection()
+        cursor: MySQLCursorAbstract = connection.cursor(dictionary=True, buffered=True)
+
+        cursor.execute(sql_query, tuple(values))
+        connection.commit()
+
+        data = cursor.fetchall()
+
+        cursor.close()
+        connection.close()
+
+        return data
