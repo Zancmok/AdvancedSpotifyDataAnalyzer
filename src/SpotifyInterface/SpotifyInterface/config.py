@@ -4,6 +4,7 @@ import dotenv
 dotenv.load_dotenv()
 
 INACTIVE_INTERVAL: int = 5
+ERROR_SLEEP_INTERVAL: int = 1
 UPLOAD_FOLDER: str = '/app/uploads'
 DB_HOST: str = "mysql"
 DB_PORT: str = "3306"
