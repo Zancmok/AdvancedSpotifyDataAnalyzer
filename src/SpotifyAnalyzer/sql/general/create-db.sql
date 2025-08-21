@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS `Genre` (
     `id` INT AUTO_INCREMENT PRIMARY KEY,
-    `name` VARCHAR(128) NOT NULL UNIQUE
+    `name` VARCHAR(255) NOT NULL UNIQUE
 );
 
 CREATE TABLE IF NOT EXISTS `Artist` (
@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS `Artist` (
     `image_url` VARCHAR(255),
     `image_height` INT,
     `image_width` INT,
-    `name` VARCHAR(128) NOT NULL UNIQUE
+    `name` VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS `GenreArtist` (
@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS `Album` (
     `image_url` VARCHAR(255),
     `image_height` INT,
     `image_width` INT,
-    `name` VARCHAR(128) NOT NULL
+    `name` VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS `AlbumArtist` (
@@ -42,7 +42,7 @@ CREATE TABLE IF NOT EXISTS `Song` (
     `album_uri` VARCHAR(64),
     `duration` INT NOT NULL,
     `explicit` TINYINT(1) NOT NULL,
-    `name` VARCHAR(128) NOT NULL,
+    `name` VARCHAR(255) NOT NULL,
     `preview_url` VARCHAR(255),
     `is_local` TINYINT(1) NOT NULL,
     FOREIGN KEY (`album_uri`) REFERENCES `Album`(`uri`)
@@ -107,21 +107,4 @@ CREATE TABLE IF NOT EXISTS `SongListen` (
     `incognito_mode` TINYINT(1),
     FOREIGN KEY (user_id) REFERENCES `User`(`id`),
     FOREIGN KEY (song_uri) REFERENCES `Song`(`uri`)
-);
-
-CREATE TABLE IF NOT EXISTS `Queue` (
-    `id` INT AUTO_INCREMENT PRIMARY KEY,
-    `owner` INT,
-    `song_uri` VARCHAR(64),
-    `timestamp` DATETIME NOT NULL,
-    `ms_played` INT NOT NULL,
-    `conn_country` VARCHAR(20) NOT NULL,
-    `ip_addr` VARCHAR(64) NOT NULL,
-    `reason_start` VARCHAR(32) NOT NULL,
-    `reason_end` VARCHAR(32) NOT NULL,
-    `shuffle` TINYINT(1),
-    `skipped` TINYINT(1),
-    `offline` TINYINT(1),
-    `incognito_mode` TINYINT(1),
-    FOREIGN KEY (owner) REFERENCES `User`(`id`)
 );

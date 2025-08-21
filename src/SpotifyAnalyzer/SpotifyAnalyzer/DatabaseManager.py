@@ -90,6 +90,9 @@ class DatabaseManager:
 
     @staticmethod
     def execute_with_list(script: str, values: list[Any]) -> Any:
+        if not values:
+            return []
+
         sql_query: str = DatabaseManager._load_query(script)
 
         sql_query = sql_query.replace(f"__miku__", ', '.join(['%s'] * len(values)))

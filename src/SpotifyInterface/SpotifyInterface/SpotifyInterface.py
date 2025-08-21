@@ -1,7 +1,7 @@
 import os.path
 from typing import Any
 from .DatabaseManager import DatabaseManager
-from os import listdir
+from os import listdir, remove
 import SpotifyInterface.config as config
 from time import sleep
 from spotipy import Spotify
@@ -51,7 +51,7 @@ class SpotifyInterface:
                 continue
 
             valid_elements.append({
-                "owner": user_id,
+                "user_id": user_id,
                 "song_uri": json_element["spotify_track_uri"],
                 "timestamp": datetime.datetime.fromisoformat(json_element["ts"].replace("Z", "+00:00")).replace(
                     tzinfo=None),
@@ -72,8 +72,10 @@ class SpotifyInterface:
     def _process_genres(genres: list[str]) -> None:
         unique_genres: set[str] = set(genres)
 
-        existing_genres: set[str] = set(DatabaseManager.execute_with_list("artist-processing/get-existing-genres.sql", list(unique_genres)))
+        existing_genres: set[str] = set([genre['name'] for genre in DatabaseManager.execute_with_list("artist-processing/get-existing-genres.sql", list(unique_genres))])
         new_genres: set[str] = unique_genres - existing_genres
+
+        print(f"Started processing genres; amount: {len(new_genres)}", flush=True)
 
         DatabaseManager.execute_many("artist-processing/add-genres.sql", [{"name": genre} for genre in new_genres])
 
@@ -81,8 +83,10 @@ class SpotifyInterface:
     def _process_artists(artist_uris: list[str]) -> None:
         unique_artist_uris: set[str] = set(artist_uris)
 
-        existing_artist_uris: set[str] = set(DatabaseManager.execute_with_list("artist-processing/get-existing-artists.sql", list(unique_artist_uris)))
+        existing_artist_uris: set[str] = set([artist['uri'] for artist in DatabaseManager.execute_with_list("artist-processing/get-existing-artists.sql", list(unique_artist_uris))])
         artists_to_process: set[str] = unique_artist_uris - existing_artist_uris
+
+        print(f"Started processing artists; amount: {len(artists_to_process)}", flush=True)
 
         processed_artists: list[dict[str, Any]] = []
         BATCH_STACK_SIZE: int = 50
@@ -120,7 +124,13 @@ class SpotifyInterface:
                 genres.append(genre)
         SpotifyInterface._process_genres(genres)
 
-        DatabaseManager.execute_many("artist-processing/add-artists.sql", processed_artists)
+        DatabaseManager.execute_many("artist-processing/add-artists.sql", [{
+            "uri": processed_artist["uri"],
+            "image_url": processed_artist["image_url"],
+            "image_height": processed_artist["image_height"],
+            "image_width": processed_artist["image_width"],
+            "name": processed_artist["name"],
+        } for processed_artist in processed_artists])
 
         genre_map: dict[str, int] = {row["name"]: row["id"] for row in DatabaseManager.run_query("artist-processing/get-genres.sql")}
 
@@ -134,8 +144,10 @@ class SpotifyInterface:
     def _process_albums(album_uris: list[str]) -> None:
         unique_album_uris: set[str] = set(album_uris)
 
-        existing_album_uris: set[str] = set(DatabaseManager.execute_with_list("album-processing/get-existing-albums.sql", list(unique_album_uris)))
+        existing_album_uris: set[str] = set([album['uri'] for album in DatabaseManager.execute_with_list("album-processing/get-existing-albums.sql", list(unique_album_uris))])
         albums_to_process: set[str] = unique_album_uris - existing_album_uris
+
+        print(f"Started processing albums; amount: {len(albums_to_process)}", flush=True)
 
         processed_albums: list[dict[str, Any]] = []
         BATCH_STACK_SIZE: int = 20
@@ -175,7 +187,15 @@ class SpotifyInterface:
                 artist_uris.append(artist_uri)
         SpotifyInterface._process_artists(artist_uris)
 
-        DatabaseManager.execute_many("album-processing/add-albums.sql", processed_albums)
+        DatabaseManager.execute_many("album-processing/add-albums.sql", [{
+            "uri": processed_album["uri"],
+            "album_type": processed_album["album_type"],
+            "total_tracks": processed_album["total_tracks"],
+            "image_url": processed_album["image_url"],
+            "image_height": processed_album["image_height"],
+            "image_width": processed_album["image_width"],
+            "name": processed_album["name"],
+        } for processed_album in processed_albums])
         DatabaseManager.execute_many("album-processing/add-album-artist.sql", [{
             "artist_uri": artist,
             "album_uri": album["uri"]
@@ -185,8 +205,10 @@ class SpotifyInterface:
     def _process_tracks(tracks: list[dict[str, Any]]) -> None:
         unique_track_uris: set[str] = set(track["song_uri"] for track in tracks)
 
-        existing_song_uris: set[str] = set(DatabaseManager.execute_with_list("song-processing/get-existing-songs.sql", list(unique_track_uris)))
+        existing_song_uris: set[str] = set([track['uri'] for track in DatabaseManager.execute_with_list("song-processing/get-existing-songs.sql", list(unique_track_uris))])
         songs_to_process: set[str] = unique_track_uris - existing_song_uris
+
+        print(f"Started processing tracks; amount: {len(songs_to_process)}", flush=True)
 
         processed_tracks: list[dict[str, Any]] = []
         BATCH_STACK_SIZE: int = 50
@@ -224,20 +246,33 @@ class SpotifyInterface:
                 artist_uris.append(artist_uri)
         SpotifyInterface._process_artists(artist_uris)
 
-        DatabaseManager.execute_many("song-processing/add-song.sql", processed_tracks)
+        DatabaseManager.execute_many("song-processing/add-song.sql", [{
+            "uri": processed_track["uri"],
+            "album_uri": processed_track["album_uri"],
+            "duration": processed_track["duration"],
+            "explicit": processed_track["explicit"],
+            "name": processed_track["name"],
+            "preview_url": processed_track.get("preview_url"),
+            "is_local": processed_track["is_local"]
+        } for processed_track in processed_tracks])
         DatabaseManager.execute_many("song-processing/add-song-artist.sql", [{
             "song_uri": song["uri"],
             "artist_uri": artist
         } for song in processed_tracks for artist in song["artists"]])
+        DatabaseManager.execute_many("song-processing/add-song-listens.sql", tracks)
 
     @staticmethod
     def _process_zip_file(user_id: int) -> None:
         path: str = os.path.join(config.UPLOAD_FOLDER, f"{user_id}.zip")
 
+        print(f"Started processing zip file of user with id of '{user_id}'!", flush=True)
+
         with ZipFile(path, 'r') as zip_file:
             for file in zip_file.filelist:
                 if not file.filename.endswith('.json'):
                     continue
+
+                print(f"Started processing file: {file.filename} of user with id: {user_id}", flush=True)
 
                 SpotifyInterface._analyze_json(user_id, zip_file, file)
 
