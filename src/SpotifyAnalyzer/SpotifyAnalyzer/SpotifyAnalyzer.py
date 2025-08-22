@@ -9,6 +9,7 @@ from werkzeug.datastructures import ImmutableDict
 from typing import Any, Optional
 import SpotifyAnalyzer.config as config
 from SpotifyAnalyzer.DatabaseManager import DatabaseManager
+from SpotifyAnalyzer.UserAPI import user_data_bp
 import filetype
 
 
@@ -26,6 +27,8 @@ class SpotifyAnalyzer:
         print(DatabaseManager.run_query("general/miku-dayo.sql"), flush=True)
 
         DatabaseManager.execute_script("general/create-db.sql")
+
+        SpotifyAnalyzer.app.register_blueprint(user_data_bp)
 
         SpotifyAnalyzer.app.run(
             host=config.HOST,
